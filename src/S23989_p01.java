@@ -3,8 +3,9 @@ import java.math.BigInteger;
 public class S23989_p01 {
 
     public static void main(String[] args) {
-        testBigInteger('+', 10);
-        testBigInteger('-', 10);
+        int system = 2;
+        //testBigInteger('+', system);
+        //testBigInteger('-', system);
 
         char[] first = new char[]{'1', '0', '9', '7', '3', '9', '2', '4',
                 '6', '0', '8', '2', '4', '6', '0', '9',
@@ -18,7 +19,7 @@ public class S23989_p01 {
                 '2', '6', '0'};
         System.out.println("============================================");
         System.out.println("MAIN");
-        calc(first, second, '-', 10);
+        calc(first, second, '-', system);
     }
 
 
@@ -29,12 +30,23 @@ public class S23989_p01 {
     public static void calc(char[] number1, char[] number2, char operator, int system){
 
         for (int count = 0; count < 10 ; count++){
-            long i = (long) (Math.random() * 1000000000);
+            long i;
+            if (Math.random() > 0.5){
+                i = (long) (Math.random() * 1000000000);
+            } else {
+                i = (long) - (Math.random() * 1000000000);
+            }
+
             System.out.println(i);
             BigInteger b = new BigInteger(Long.toString(i), 10);
-            System.out.println(b.toString(2));
-            System.out.println(getNumberInNumeralSystemFromDecimal(Long.toString(i), 2));
+            System.out.println("Test by BigInteger: " + b.toString(system));
+            System.out.println("Test by MyFunction: " + getNumberInNumeralSystemFromDecimal(Long.toString(i), system));
         }
+//        long i = 1214124125L;
+//        System.out.println(i);
+//        BigInteger b = new BigInteger(Long.toString(i), 10);
+//        System.out.println("Test by BigInteger: " + b.toString(system));
+//        System.out.println("Test by MyFunction: " + getNumberInNumeralSystemFromDecimal(Long.toString(i), system));
 
     }
 
@@ -109,6 +121,9 @@ public class S23989_p01 {
         }
         return true;
     }
+
+
+
 
     private static String getStringDecimalNumberAfterOperationWithNumbers(char[] number1,
                                                                           char[] number2,
@@ -213,7 +228,7 @@ public class S23989_p01 {
                 int number = Integer.parseInt(Character.toString(decimalNumbers[i]));
                 int resultOfDivision = (number+remainder*10)/system;
                 resultString += resultOfDivision;
-                remainder = number%2;
+                remainder = (number+remainder*10)%system;
             }
             count++;
             if (resultString.contains(".")){
@@ -222,7 +237,14 @@ public class S23989_p01 {
             while (resultString.startsWith("0")){
                 resultString=resultString.substring(1);
             }
-            binaryNumer.append(remainder);
+            String appendResult = "";
+            if (remainder <= 9){
+                appendResult = Integer.toString(remainder);
+            } else {
+                char secondPart = (char) (remainder+87);
+                appendResult = Character.toString(secondPart);
+            }
+            binaryNumer.append(appendResult);
             remainder = 0;
             if (resultString.equals("")) break;
         }
