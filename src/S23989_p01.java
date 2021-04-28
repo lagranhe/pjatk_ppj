@@ -3,23 +3,24 @@ import java.math.BigInteger;
 public class S23989_p01 {
 
     public static void main(String[] args) {
-        int system = 2;
-        //testBigInteger('+', system);
-        //testBigInteger('-', system);
 
-        char[] first = new char[]{'1', '0', '9', '7', '3', '9', '2', '4',
-                '6', '0', '8', '2', '4', '6', '0', '9',
-                '2', '1', '6', '0', '9', '2', '4', '6',
-                '0', '9', '2', '4', '6', '0', '9', '2',
-                '4', '9', '0'};
-        char[] second = new char[]{'1', '0', '9', '7', '3', '9', '2', '4',
-                '6', '0', '9', '4', '4', '6', '0', '9',
-                '2', '1', '9', '0', '9', '2', '4', '6',
-                '0', '9', '2', '4', '6', '0', '9', '2',
-                '2', '6', '0'};
-        System.out.println("============================================");
-        System.out.println("MAIN");
-        calc(first, second, '-', system);
+        char[] first = new char[]{ r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r()};
+        char[] second = new char[]{r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r(), r(), r(), r(), r(), r(),
+                r(), r(), r()};
+
+        for (int system = 2; system < 17; system ++){
+            for (int count = 0; count < 5 ; count++){
+                calc(first, second, '+', system);
+                testCalc(first, second, '+', system);
+            }
+        }
     }
 
 
@@ -28,26 +29,15 @@ public class S23989_p01 {
 
 
     public static void calc(char[] number1, char[] number2, char operator, int system){
-
-        for (int count = 0; count < 10 ; count++){
-            long i;
-            if (Math.random() > 0.5){
-                i = (long) (Math.random() * 1000000000);
-            } else {
-                i = (long) - (Math.random() * 1000000000);
-            }
-
-            System.out.println(i);
-            BigInteger b = new BigInteger(Long.toString(i), 10);
-            System.out.println("Test by BigInteger: " + b.toString(system));
-            System.out.println("Test by MyFunction: " + getNumberInNumeralSystemFromDecimal(Long.toString(i), system));
-        }
-//        long i = 1214124125L;
-//        System.out.println(i);
-//        BigInteger b = new BigInteger(Long.toString(i), 10);
-//        System.out.println("Test by BigInteger: " + b.toString(system));
-//        System.out.println("Test by MyFunction: " + getNumberInNumeralSystemFromDecimal(Long.toString(i), system));
-
+        String decimalResultAfterOperation =
+                getStringDecimalNumberAfterOperationWithNumbers(number1, number2, operator);
+        String result = getNumberInNumeralSystemFromDecimal(decimalResultAfterOperation, system);
+        System.out.println("Result of an operation on number:");
+        System.out.println(getStringFromCharArray(number1));
+        System.out.println(operator);
+        System.out.println(getStringFromCharArray(number2));
+        System.out.println("in numeral system: " + system + " is ---->");
+        System.out.println(result);
     }
 
 
@@ -256,44 +246,7 @@ public class S23989_p01 {
     }
 
 
-
-
-
-    //TESTING BIGINTEGER
-    public static void testBigInteger (char operation, int system){
-        char[] first = new char[]{'1', '0', '9', '7', '3', '9', '2', '4',
-                '6', '0', '8', '2', '4', '6', '0', '9',
-                '2', '1', '6', '0', '9', '2', '4', '6',
-                '0', '9', '2', '4', '6', '0', '9', '2',
-                '4', '9', '0'};
-        char[] second = new char[]{'1', '0', '9', '7', '3', '9', '2', '4',
-                '6', '0', '9', '4', '4', '6', '0', '9',
-                '2', '1', '9', '0', '9', '2', '4', '6',
-                '0', '9', '2', '4', '6', '0', '9', '2',
-                '2', '6', '0'};
-        System.out.println("TEST");
-        System.out.println(charArrayToString(first));
-        System.out.println(operation);
-        System.out.println(charArrayToString(second));
-        System.out.println("in system " + system + ":");
-        calcAlter(first, second, operation, system);
-    }
-
-    public static void calcAlter(char[] number1, char[] number2, char operator, int system){
-        BigInteger firstBigInteger = new BigInteger(charArrayToString(number1));
-        BigInteger secondBigInteger = new BigInteger(charArrayToString(number2));
-        BigInteger operationResult = new BigInteger("0");
-        if (operator == '-'){
-            operationResult = firstBigInteger.subtract(secondBigInteger);
-        } else if (operator == '+'){
-            operationResult = firstBigInteger.add(secondBigInteger);
-        }
-        String result = operationResult.toString(system);
-        System.out.println(result);
-    }
-
-
-    private static String charArrayToString (char[] chars){
+    private static String getStringFromCharArray(char[] chars){
         StringBuilder s = new StringBuilder();
         for (char i : chars){
             s.append(i);
@@ -307,5 +260,26 @@ public class S23989_p01 {
             System.out.print(i + " ");
         }
         System.out.println();
+    }
+
+    //TESTING BIGINTEGER
+    public static void testCalc(char[] number1, char[] number2, char operator, int system){
+        BigInteger firstBigInteger = new BigInteger(getStringFromCharArray(number1));
+        BigInteger secondBigInteger = new BigInteger(getStringFromCharArray(number2));
+        BigInteger operationResult = new BigInteger("0");
+        if (operator == '-'){
+            operationResult = firstBigInteger.subtract(secondBigInteger);
+        } else if (operator == '+'){
+            operationResult = firstBigInteger.add(secondBigInteger);
+        }
+        String result = operationResult.toString(system);
+        System.out.println("biginteger result: " + system + " is ---->");
+        System.out.println(result);
+        System.out.println("======================================================================");
+    }
+
+    private static char r(){
+        int i = (int) (Math.random() * 10);
+        return (char) i;
     }
 }
