@@ -1,32 +1,30 @@
 import java.math.BigInteger;
 
 public class S23989_p01 {
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
 
-        char[] first = new char[]{ r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r()};
-        char[] second = new char[]{r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r(), r(), r(), r(), r(), r(),
-                r(), r(), r()};
 
         for (int system = 2; system < 17; system ++){
             for (int count = 0; count < 5 ; count++){
+                char[] first = new char[]{ r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r()};
+                char[] second = new char[]{r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r()};
                 calc(first, second, '+', system);
                 testCalc(first, second, '+', system);
             }
         }
     }
-
-
-
-
-
 
     public static void calc(char[] number1, char[] number2, char operator, int system){
         String decimalResultAfterOperation =
@@ -36,18 +34,11 @@ public class S23989_p01 {
         System.out.println(getStringFromCharArray(number1));
         System.out.println(operator);
         System.out.println(getStringFromCharArray(number2));
+        System.out.println("Decimal result is :");
+        System.out.println(ANSI_RED + decimalResultAfterOperation + ANSI_RESET);
         System.out.println("in numeral system: " + system + " is ---->");
-        System.out.println(result);
+        System.out.println(ANSI_GREEN + result + ANSI_RESET);
     }
-
-
-
-
-
-
-
-
-
 
     private static int add(int i, int j) {
         int uncommonBitsFromBoth = i ^ j;
@@ -112,86 +103,77 @@ public class S23989_p01 {
         return true;
     }
 
-
-
-
     private static String getStringDecimalNumberAfterOperationWithNumbers(char[] number1,
                                                                           char[] number2,
                                                                           char operator){
         System.out.println("============================================");
         System.out.println("CALC METHOD");
-
         int[] integerNumbersFirst = charArrayToIntegerArray(number1);
         int[] integerNumbersSecond = charArrayToIntegerArray(number2);
         int firstCount = integerNumbersFirst.length;
         int secondCount = integerNumbersSecond.length;
-        int[] resultOfOperationAddOrSubtract = new int[Math.max(firstCount, secondCount)];
+        String[] resultOfOperationAddOrSubtract = new String[Math.max(firstCount, secondCount) + 1];
         int resultCount = resultOfOperationAddOrSubtract.length;
-        int firstInteger = integerNumbersFirst[firstCount-1];
-        int secondInteger = integerNumbersSecond[secondCount-1];
-
+        int firstInteger = integerNumbersFirst[firstCount - 1];
+        int secondInteger = integerNumbersSecond[secondCount - 1];
         printIntArray("First array", integerNumbersFirst);
         printIntArray("Second array", integerNumbersSecond);
         boolean isFirstBiggerThenOne = true;
-        //operations of sum or subtract for 10-sys integers
-        if (operator=='+'){
-            while (resultCount > 0){
-                resultOfOperationAddOrSubtract[resultCount-1] = add(firstInteger, secondInteger);
-                firstCount--;
-                firstInteger = (firstCount-1>=0) ? integerNumbersFirst[firstCount-1] : 0;
-                secondCount--;
-                secondInteger = (secondCount-1>=0) ? integerNumbersSecond[secondCount-1] : 0;
-                resultCount--;
+        if (operator == '+') {
+            while(resultCount > 0) {
+                resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(add(firstInteger, secondInteger));
+                --firstCount;
+                firstInteger = firstCount - 1 >= 0 ? integerNumbersFirst[firstCount - 1] : 0;
+                --secondCount;
+                secondInteger = secondCount - 1 >= 0 ? integerNumbersSecond[secondCount - 1] : 0;
+                --resultCount;
             }
-        } else if (operator=='-'){
-            isFirstBiggerThenOne = isFirstArrayOfNumberHigherOrEqualThenSecond(
-                    integerNumbersFirst, integerNumbersSecond);
-            while (resultCount > 0){
-                if (isFirstBiggerThenOne){
-                    resultOfOperationAddOrSubtract[resultCount-1] = subtract(firstInteger, secondInteger);
+        } else if (operator == '-') {
+            for(isFirstBiggerThenOne = isFirstArrayOfNumberHigherOrEqualThenSecond(integerNumbersFirst, integerNumbersSecond); resultCount > 0; --resultCount) {
+                if (isFirstBiggerThenOne) {
+                    resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(subtract(firstInteger, secondInteger));
                 } else {
-                    resultOfOperationAddOrSubtract[resultCount-1] = subtract(secondInteger, firstInteger);
+                    resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(subtract(secondInteger, firstInteger));
                 }
-                firstCount--;
-                firstInteger = (firstCount-1>=0) ? integerNumbersFirst[firstCount-1] : 0;
-                secondCount--;
-                secondInteger = (secondCount-1>=0) ? integerNumbersSecond[secondCount-1] : 0;
-                resultCount--;
-            }
-        }
-        printIntArray("Result array        ", resultOfOperationAddOrSubtract);
 
-        //check and correct invalid integers (negative numbers or higher then 100000000
-        for (int i = resultOfOperationAddOrSubtract.length-1; i > 0; i--){
-            if (isNumberRankMoreThenEight(resultOfOperationAddOrSubtract[i])){
-                resultOfOperationAddOrSubtract[i-1] = resultOfOperationAddOrSubtract[i-1] + 1;
-                resultOfOperationAddOrSubtract[i] = resultOfOperationAddOrSubtract[i] - 100000000;
-            } else if (isNumberLessThenZero(resultOfOperationAddOrSubtract[i])){
-                resultOfOperationAddOrSubtract[i] = 100000000 + resultOfOperationAddOrSubtract[i];
-                resultOfOperationAddOrSubtract[i-1] = resultOfOperationAddOrSubtract[i-1] - 1;
+                --firstCount;
+                firstInteger = firstCount - 1 >= 0 ? integerNumbersFirst[firstCount - 1] : 0;
+                --secondCount;
+                secondInteger = secondCount - 1 >= 0 ? integerNumbersSecond[secondCount - 1] : 0;
             }
         }
-        printIntArray("Correct result array", resultOfOperationAddOrSubtract);
+
+        printStringArray("Result array        ", resultOfOperationAddOrSubtract);
+
+        for(int i = resultOfOperationAddOrSubtract.length - 1; i > 0; --i) {
+            if (isNumberRankMoreThenEight(Integer.parseInt(resultOfOperationAddOrSubtract[i]))) {
+                resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) + 1);
+                resultOfOperationAddOrSubtract[i] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i]) - 100000000);
+            } else if (isNumberLessThenZero(Integer.parseInt(resultOfOperationAddOrSubtract[i]))) {
+                resultOfOperationAddOrSubtract[i] += 100000000;
+                resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) - 1);
+            }
+        }
+
+        printStringArray("Correct result array", resultOfOperationAddOrSubtract);
         String resultOfCalculationDecimal = "";
-        if (!isFirstBiggerThenOne){
+        if (!isFirstBiggerThenOne) {
             resultOfCalculationDecimal = "-" + resultOfOperationAddOrSubtract[0];
         }
-        for (int s = 1; s < resultOfOperationAddOrSubtract.length; s++){
-            String resultWithoutZeroes = Integer.toString(resultOfOperationAddOrSubtract[s]);
+
+        for(int s = 1; s < resultOfOperationAddOrSubtract.length; ++s) {
+            String resultWithoutZeroes = resultOfOperationAddOrSubtract[s];
             int difference = 8 - resultWithoutZeroes.length();
-            for (int i = 1; i < difference; i ++){
-                resultOfCalculationDecimal += "0";
+
+            for(int i = 0; i < difference; ++i) {
+                resultOfCalculationDecimal = resultOfCalculationDecimal + "0";
             }
-            resultOfCalculationDecimal += resultWithoutZeroes;
+
+            resultOfCalculationDecimal = resultOfCalculationDecimal + resultWithoutZeroes;
         }
+
         return resultOfCalculationDecimal;
     }
-
-
-
-
-
-
 
     public static String getNumberInNumeralSystemFromDecimal(String decimalNumber, int system){
         boolean negativeNumberFlag = false;
@@ -262,6 +244,14 @@ public class S23989_p01 {
         System.out.println();
     }
 
+    private static void printStringArray(String text, String[] intArray){
+        System.out.print(text + " ");
+        for (String i : intArray){
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+
     //TESTING BIGINTEGER
     public static void testCalc(char[] number1, char[] number2, char operator, int system){
         BigInteger firstBigInteger = new BigInteger(getStringFromCharArray(number1));
@@ -273,13 +263,15 @@ public class S23989_p01 {
             operationResult = firstBigInteger.add(secondBigInteger);
         }
         String result = operationResult.toString(system);
+        System.out.println("BigInteger decimal is :");
+        System.out.println(ANSI_RED + operationResult.toString(10) + ANSI_RESET);
         System.out.println("biginteger result: " + system + " is ---->");
-        System.out.println(result);
+        System.out.println(ANSI_GREEN + result + ANSI_RESET);
         System.out.println("======================================================================");
     }
 
     private static char r(){
-        int i = (int) (Math.random() * 10);
+        int i = (int) ((Math.random() * (57 - 48)) + 48);
         return (char) i;
     }
 }
