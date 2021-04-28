@@ -29,11 +29,11 @@ public class S23989_p01 {
     public static void calc(char[] number1, char[] number2, char operator, int system){
 
         for (int count = 0; count < 10 ; count++){
-            long i = - (long) (Math.random() * 1000000000);
+            long i = (long) (Math.random() * 1000000000);
             System.out.println(i);
             BigInteger b = new BigInteger(Long.toString(i), 10);
             System.out.println(b.toString(2));
-            System.out.println(getBinaryNumberFromDecimal(Long.toString(i)));
+            System.out.println(getNumberInNumeralSystemFromDecimal(Long.toString(i), 2));
         }
 
     }
@@ -188,7 +188,7 @@ public class S23989_p01 {
 
 
 
-    public static String getBinaryNumberFromDecimal(String decimalNumber){
+    public static String getNumberInNumeralSystemFromDecimal(String decimalNumber, int system){
         boolean negativeNumberFlag = false;
         if (decimalNumber.contains("-")){
             negativeNumberFlag = true;
@@ -208,11 +208,10 @@ public class S23989_p01 {
         int count = 0;
         while (true){
             char[] decimalNumbers = resultString.toCharArray();
-            binaryNumer.append((Double.parseDouble(resultString) % 2 == 0) ? 0 : 1);
             resultString = "";
             for (int i = 0; i < decimalNumbers.length; i ++){
                 int number = Integer.parseInt(Character.toString(decimalNumbers[i]));
-                int resultOfDivision = (number+remainder*10)/2;
+                int resultOfDivision = (number+remainder*10)/system;
                 resultString += resultOfDivision;
                 remainder = number%2;
             }
@@ -223,27 +222,15 @@ public class S23989_p01 {
             while (resultString.startsWith("0")){
                 resultString=resultString.substring(1);
             }
-            if (resultString.equals("")) break;
+            binaryNumer.append(remainder);
             remainder = 0;
+            if (resultString.equals("")) break;
         }
         if (negativeNumberFlag){
             binaryNumer.append("-");
         }
         binaryNumer.reverse();
         return binaryNumer.toString();
-    }
-
-    public static void printNumberInNumeralSystem (int system){
-        int arrayCapacity;
-        if (system >=2 && system <= 4) {
-            arrayCapacity = 2;
-        } else if (system >= 5 && system <=8){
-            arrayCapacity = 3;
-        } else if (system >= 9 && system <=16){
-            arrayCapacity = 4;
-        }
-
-
     }
 
 
