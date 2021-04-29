@@ -1,13 +1,10 @@
 import java.math.BigInteger;
 
 public class S23989_p01 {
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
 
-
+        //tests with different numeric systems
         for (int system = 2; system < 17; system ++){
             for (int count = 0; count < 5 ; count++){
                 char[] first = new char[]{ r(), r(), r(), r(), r(), r(), r(), r(),
@@ -21,7 +18,9 @@ public class S23989_p01 {
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r()};
+                //task method for calculate
                 calc(first, second, '-', system);
+                //test method that using BigInteger for calculate
                 testCalc(first, second, '-', system);
             }
         }
@@ -31,16 +30,10 @@ public class S23989_p01 {
         String decimalResultAfterOperation =
                 getStringDecimalNumberAfterOperationWithNumbers(number1, number2, operator);
         String result = getNumberInNumeralSystemFromDecimal(decimalResultAfterOperation, system);
-        System.out.println("Result of an operation on number:");
-        System.out.println(getStringFromCharArray(number1));
-        System.out.println(operator);
-        System.out.println(getStringFromCharArray(number2));
-        System.out.println("Decimal result is :");
-        System.out.println(ANSI_RED + decimalResultAfterOperation + ANSI_RESET);
-        System.out.println("in numeral system: " + system + " is ---->");
-        System.out.println(ANSI_GREEN + result + ANSI_RESET);
+        System.out.println(result);
     }
 
+    // add function using binary operation
     private static int add(int i, int j) {
         int uncommonBitsFromBoth = i ^ j;
         int commonBitsFromBoth = i & j;
@@ -52,6 +45,7 @@ public class S23989_p01 {
         );
     }
 
+    // subtract function using binary operation
     private static int subtract(int i, int j) {
         while (j != 0) {
             int borrow = (~i) & j;
@@ -61,6 +55,7 @@ public class S23989_p01 {
         return i;
     }
 
+    //this method separate char array into array of eight-rank integers
     private static int[] charArrayToIntegerArray (char[] number){
         StringBuilder stringNumber1 = new StringBuilder();
         for (char c : number) {
@@ -87,6 +82,7 @@ public class S23989_p01 {
         return number < 0;
     }
 
+    //need this method for correct compute of subtract
     private static boolean isFirstArrayOfNumberHigherOrEqualThenSecond(int[] first, int[] second){
         if (first.length > second.length){
             return true;
@@ -104,11 +100,10 @@ public class S23989_p01 {
         return true;
     }
 
+    //method implement the calculation on to chars. result - DECIMAL number in string format
     private static String getStringDecimalNumberAfterOperationWithNumbers(char[] number1,
                                                                           char[] number2,
                                                                           char operator){
-        System.out.println("============================================");
-        System.out.println("CALC METHOD");
         int[] integerNumbersFirst = charArrayToIntegerArray(number1);
         int[] integerNumbersSecond = charArrayToIntegerArray(number2);
         int firstCount = integerNumbersFirst.length;
@@ -117,11 +112,10 @@ public class S23989_p01 {
         int resultCount = resultOfOperationAddOrSubtract.length;
         int firstInteger = integerNumbersFirst[firstCount - 1];
         int secondInteger = integerNumbersSecond[secondCount - 1];
-        printIntArray("First array", integerNumbersFirst);
-        printIntArray("Second array", integerNumbersSecond);
         boolean isFirstBiggerThenOne = true;
         if (operator == '+') {
             while(resultCount > 0) {
+                //add two integers using bit operations
                 resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(add(firstInteger, secondInteger));
                 --firstCount;
                 firstInteger = firstCount - 1 >= 0 ? integerNumbersFirst[firstCount - 1] : 0;
@@ -132,20 +126,18 @@ public class S23989_p01 {
         } else if (operator == '-') {
             for(isFirstBiggerThenOne = isFirstArrayOfNumberHigherOrEqualThenSecond(integerNumbersFirst, integerNumbersSecond); resultCount > 0; --resultCount) {
                 if (isFirstBiggerThenOne) {
+                    //subtract two integers using bit operations
                     resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(subtract(firstInteger, secondInteger));
                 } else {
+                    //subtract two integers using bit operations
                     resultOfOperationAddOrSubtract[resultCount - 1] = String.valueOf(subtract(secondInteger, firstInteger));
                 }
-
                 --firstCount;
                 firstInteger = firstCount - 1 >= 0 ? integerNumbersFirst[firstCount - 1] : 0;
                 --secondCount;
                 secondInteger = secondCount - 1 >= 0 ? integerNumbersSecond[secondCount - 1] : 0;
             }
         }
-
-        printStringArray("Result array        ", resultOfOperationAddOrSubtract);
-
         for(int i = resultOfOperationAddOrSubtract.length - 1; i > 0; --i) {
             if (isNumberRankMoreThenEight(Integer.parseInt(resultOfOperationAddOrSubtract[i]))) {
                 resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) + 1);
@@ -155,13 +147,11 @@ public class S23989_p01 {
                 resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) - 1);
             }
         }
-
-        printStringArray("Correct result array", resultOfOperationAddOrSubtract);
         String resultOfCalculationDecimal = "";
         if (!isFirstBiggerThenOne) {
             resultOfCalculationDecimal = "-" + resultOfOperationAddOrSubtract[0];
         }
-
+        // add zeroes to integers to XXXXXXXX format (if result is XXXX -> 0000XXXX) (where X - number)
         for(int s = 1; s < resultOfOperationAddOrSubtract.length; ++s) {
             String resultWithoutZeroes = resultOfOperationAddOrSubtract[s];
             int difference = 8 - resultWithoutZeroes.length();
@@ -176,6 +166,7 @@ public class S23989_p01 {
         return resultOfCalculationDecimal;
     }
 
+    //method for convert decimal string into required numerical system
     public static String getNumberInNumeralSystemFromDecimal(String decimalNumber, int system){
         boolean negativeNumberFlag = false;
         if (decimalNumber.contains("-")){
@@ -211,9 +202,12 @@ public class S23989_p01 {
                 resultString=resultString.substring(1);
             }
             String appendResult = "";
+            //for numerical system < 9
             if (remainder <= 9){
                 appendResult = Integer.toString(remainder);
-            } else {
+            }
+            //for numerical system > 9
+            else {
                 char secondPart = (char) (remainder+87);
                 appendResult = Character.toString(secondPart);
             }
@@ -237,23 +231,7 @@ public class S23989_p01 {
         return s.toString();
     }
 
-    private static void printIntArray(String text, int[] intArray){
-        System.out.print(text + " ");
-        for (int i : intArray){
-            System.out.print(i + " ");
-        }
-        System.out.println();
-    }
-
-    private static void printStringArray(String text, String[] intArray){
-        System.out.print(text + " ");
-        for (String i : intArray){
-            System.out.print(i + " ");
-        }
-        System.out.println();
-    }
-
-    //TESTING BIGINTEGER
+    //method for test - NOT THE PART OF PROJECT SOLUTION
     public static void testCalc(char[] number1, char[] number2, char operator, int system){
         BigInteger firstBigInteger = new BigInteger(getStringFromCharArray(number1));
         BigInteger secondBigInteger = new BigInteger(getStringFromCharArray(number2));
@@ -264,13 +242,10 @@ public class S23989_p01 {
             operationResult = firstBigInteger.add(secondBigInteger);
         }
         String result = operationResult.toString(system);
-        System.out.println("BigInteger decimal is :");
-        System.out.println(ANSI_RED + operationResult.toString(10) + ANSI_RESET);
-        System.out.println("biginteger result: " + system + " is ---->");
-        System.out.println(ANSI_GREEN + result + ANSI_RESET);
-        System.out.println("======================================================================");
+        System.out.println(result);
     }
 
+    //method for test - NOT THE PART OF PROJECT SOLUTION
     private static char r(){
         int i = (int) ((Math.random() * (57 - 48)) + 48);
         return (char) i;
