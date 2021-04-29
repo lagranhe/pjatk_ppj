@@ -14,14 +14,15 @@ public class S23989_p01 {
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
+                        r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r()};
                 char[] second = new char[]{r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
                         r(), r(), r(), r(), r(), r(), r(), r(),
-                        r(), r(), r()};
-                calc(first, second, '+', system);
-                testCalc(first, second, '+', system);
+                        r(), r(), r(), r(), r(), r(), r()};
+                calc(first, second, '-', system);
+                testCalc(first, second, '-', system);
             }
         }
     }
@@ -150,7 +151,7 @@ public class S23989_p01 {
                 resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) + 1);
                 resultOfOperationAddOrSubtract[i] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i]) - 100000000);
             } else if (isNumberLessThenZero(Integer.parseInt(resultOfOperationAddOrSubtract[i]))) {
-                resultOfOperationAddOrSubtract[i] += 100000000;
+                resultOfOperationAddOrSubtract[i] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i]) + 100000000);
                 resultOfOperationAddOrSubtract[i - 1] = String.valueOf(Integer.parseInt(resultOfOperationAddOrSubtract[i - 1]) - 1);
             }
         }
