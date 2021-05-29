@@ -1,28 +1,49 @@
 public class S23989_p02 {
 
     public static void main(String[] args) {
-        int[] intArray =
-                new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
 
-        char[] charArray =
-                new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
         float[] floatArray =
                 new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
 
+//        for (int i = 0; i < 100; i++){
+//            int[] intArray =
+//                    new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
+//            printIntArray(intArray);
+//            sortIntBucket(intArray);
+//            printIntArray(intArray);
+//            System.out.println("========================");
+//        }
+
+//        for (int i = 0; i < 100; i++){
+//            double[] doubleArray =
+//                    new double[] {rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+//                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+//                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+//                    };
+//            printDoubleArray(doubleArray);
+//            sortDoubleBucket(doubleArray);
+//            printDoubleArray(doubleArray);
+//            System.out.println("========================");
+//        }
+
+
         for (int i = 0; i < 100; i++){
-            double[] doubleArray =
-                    new double[] {rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-            };
-            printDoubleArray(doubleArray);
-            sortDoubleRadix(doubleArray);
-            printDoubleArray(doubleArray);
+            char[] charArray =
+                    new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
+            printCharArray(charArray);
+            sortCharRadix(charArray);
+            printCharArray(charArray);
             System.out.println("========================");
         }
+
+
+
 
 
     }
@@ -184,6 +205,15 @@ public class S23989_p02 {
     public static void sortIntBucket(int[] numbers){
         int countPositive = 0;
         int countZeroes = 0;
+        int maxValue = getMaxInt(numbers);
+        int minValue = getMinInt(numbers);
+        int cap = 1;
+        maxValue = Math.max(maxValue, -minValue);
+        while (maxValue > 10){
+            maxValue = maxValue / 10;
+            cap = cap * 10;
+        }
+
         for (int i : numbers){
             if (i > 0) countPositive++;
             if (i == 0) countZeroes++;
@@ -211,7 +241,7 @@ public class S23989_p02 {
                 positiveBucket[i][0] = 1;
             }
             for (int i = 0; i < positArray.length; i ++){
-                int numberOfBucket = (positArray[i] / 10) + 1;
+                int numberOfBucket = (positArray[i] / cap) + 1;
                 int emptyBucket = positiveBucket[numberOfBucket][0];
                 positiveBucket[numberOfBucket][emptyBucket] = positArray[i];
                 positiveBucket[numberOfBucket][0]++;
@@ -228,7 +258,7 @@ public class S23989_p02 {
                 negativeBucket[i][0] = 1;
             }
             for (int i = 0; i < negatArray.length; i ++){
-                int numberOfBucket = (negatArray[i] / 10) + 1;
+                int numberOfBucket = (negatArray[i] / cap) + 1;
                 int emptyBucket = negativeBucket[numberOfBucket][0];
                 negativeBucket[numberOfBucket][emptyBucket] = negatArray[i];
                 negativeBucket[numberOfBucket][0]++;
@@ -368,6 +398,16 @@ public class S23989_p02 {
             }
         }
         return max;
+    }
+
+    private static int getMinInt(int[] array) {
+        int min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+        return min;
     }
 
 
@@ -716,34 +756,322 @@ public class S23989_p02 {
 
     //sort char - short
     public static void sortCharInsertion(char[] numbers){
+        for (int i = 1; i < numbers.length; i++) {
+            int key = numbers[i];
+            int k = i - 1;
+            while (k >= 0 && numbers[k] > key) {
+                numbers[k + 1] = numbers[k];
+                k = k - 1;
+            }
+            numbers[k + 1] = (char) key;
+        }
     }
 
     public static void sortCharSelection(char[] numbers){
+        for (int i = 0; i < numbers.length - 1; i++) {
+            int minElementIndex = i;
+            for (int k = i + 1; k < numbers.length; k++) {
+                if (numbers[minElementIndex] > numbers[k]) {
+                    minElementIndex = k;
+                }
+            }
 
+            if (minElementIndex != i) {
+                int temp = numbers[i];
+                numbers[i] = numbers[minElementIndex];
+                numbers[minElementIndex] = (char) temp;
+            }
+        }
     }
 
     public static void sortCharMerge(char[] numbers){
+        mergeSortForChar(numbers, numbers.length);
+    }
 
+    public static void mergeSortForChar(char[] array, int n) {
+        if (n < 2) {
+            return;
+        }
+        int mid = n / 2;
+        char[] k = new char[mid];
+        char[] r = new char[n - mid];
+
+        for (int i = 0; i < mid; i++) {
+            k[i] = array[i];
+        }
+        for (int i = mid; i < n; i++) {
+            r[i - mid] = array[i];
+        }
+        mergeSortForChar(k, mid);
+        mergeSortForChar(r, n - mid);
+
+        mergeChar(array, k, r, mid, n - mid);
+    }
+
+    public static void mergeChar(char[] array, char[] l, char[] r, int left, int right) {
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < left && j < right) {
+            if (l[i] <= r[j]) {
+                array[k++] = l[i++];
+            }
+            else {
+                array[k++] = r[j++];
+            }
+        }
+        while (i < left) {
+            array[k++] = l[i++];
+        }
+        while (j < right) {
+            array[k++] = r[j++];
+        }
     }
 
     public static void sortCharHeapsort(char[] numbers){
+        int n = numbers.length;
+        for (int i = n / 2 - 1; i >= 0; i--){
+            heapifyChar(numbers, n, i);
+        }
+        for (int i = n - 1; i > 0; i--) {
+            char temp = numbers[0];
+            numbers[0] = numbers[i];
+            numbers[i] = temp;
+            heapifyChar(numbers, i, 0);
+        }
+    }
 
+    private static void heapifyChar(char[] array, int n, int i){
+        int largestNumber = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+
+        if (l < n && array[l] > array[largestNumber]){
+            largestNumber = l;
+        }
+
+        if (r < n && array[r] > array[largestNumber]){
+            largestNumber = r;
+        }
+
+        if (largestNumber != i) {
+            char temp = array[i];
+            array[i] = array[largestNumber];
+            array[largestNumber] = temp;
+            heapifyChar(array, n, largestNumber);
+        }
     }
 
     public static void sortCharQuicksort(char[] numbers){
+        quickSortChar(numbers, 0, numbers.length-1);
+    }
 
+    private static void quickSortChar(char[] array, int begin, int end) {
+        if (begin < end) {
+            int partIndex = partChar(array, begin, end);
+
+            quickSortChar(array, begin, partIndex-1);
+            quickSortChar(array, partIndex+1, end);
+        }
+    }
+
+    private static int partChar(char[] array, int begin, int end) {
+        int pivot = array[end];
+        int i = (begin-1);
+        for (int k = begin; k < end; k++) {
+            if (array[k] <= pivot) {
+                i++;
+
+                char temp = array[i];
+                array[i] = array[k];
+                array[k] = temp;
+            }
+        }
+        char temp = array[i+1];
+        array[i+1] = array[end];
+        array[end] = temp;
+        return i+1;
     }
 
     public static void sortCharBubble(char[] numbers){
-
+        int n = numbers.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (numbers[j] > numbers[j + 1]) {
+                    char temp = numbers[j];
+                    numbers[j] = numbers[j + 1];
+                    numbers[j + 1] = temp;
+                }
+            }
+        }
     }
 
     public static void sortCharBucket(char[] numbers){
+        int countPositive = 0;
+        int countZeroes = 0;
+        int maxValue = getMaxChar(numbers);
+        int minValue = getMinChar(numbers);
+        int cap = 1;
+        maxValue = Math.max(maxValue, -minValue);
+        while (maxValue > 10){
+            maxValue = maxValue / 10;
+            cap = cap * 10;
+        }
 
+        for (int i : numbers){
+            if (i > 0) countPositive++;
+            if (i == 0) countZeroes++;
+        }
+        int[] positArray = new int[countPositive];
+        int count = 0;
+        for (int i : numbers){
+            if (i > 0){
+                positArray[count] = i;
+                count++;
+            }
+        }
+        int[][] positiveBucket = new int[11][positArray.length+1];
+        if (positArray.length > 0){
+            for (int i = 0; i < 11; i ++){
+                positiveBucket[i][0] = 1;
+            }
+            for (int i = 0; i < positArray.length; i ++){
+                int numberOfBucket = (positArray[i] / cap) + 1;
+                int emptyBucket = positiveBucket[numberOfBucket][0];
+                positiveBucket[numberOfBucket][emptyBucket] = positArray[i];
+                positiveBucket[numberOfBucket][0]++;
+            }
+            for (int i = 0; i < 11; i++){
+                positiveBucket[i][0] = 0;
+                sortIntInsertion(positiveBucket[i]);
+            }
+        }
+
+        int[] result = new int[numbers.length];
+        for (int i = 0; i < result.length;){
+            for (int countZero = 0; countZero < countZeroes; countZero++){
+                result[i] = 0;
+                i++;
+            }
+            for (int countBucket = 0; countBucket < 11; countBucket++){
+                for (int k = 0; k < positiveBucket[countBucket].length; k ++){
+                    if (positiveBucket[countBucket][k] != 0){
+                        result[i] = positiveBucket[countBucket][k];
+                        i++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < numbers.length; i ++){
+            numbers[i] = (char) result[i];
+        }
     }
 
-    public static void sortCharRadix(char[] numbers){
 
+
+    public static void sortCharRadix(char[] numbers){
+        int max = getMaxChar(numbers);
+        if (max < 0){
+            max = - max;
+        }
+        int countPositive = 0;
+        for (int i : numbers){
+            if (i >= 0) countPositive++;
+        }
+        int countNegative = numbers.length - countPositive;
+        int[] positArray = new int[countPositive];
+        int[] negatArray = new int[countNegative];
+        int count = 0;
+        for (int i : numbers){
+            if (i >= 0){
+                positArray[count] = i;
+                count++;
+            }
+        }
+        count = 0;
+        for (int i : numbers){
+            if (i < 0){
+                negatArray[count] = 0 - i;
+                count++;
+            }
+        }
+
+        if (positArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortInt(positArray, positArray.length, place);
+            }
+        }
+
+        if (negatArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortInt(negatArray, negatArray.length, place);
+            }
+            for(int i=0; i<negatArray.length/2; i++){
+                int temp = negatArray[i];
+                negatArray[i] = negatArray[negatArray.length -i -1];
+                negatArray[negatArray.length -i -1] = temp;
+            }
+        }
+
+        int countNeg=0;
+        int countPos=0;
+        for (int i = 0; i < numbers.length; i++){
+            if (countNeg <= negatArray.length-1){
+                numbers[i] = (char) - negatArray[countNeg];
+                countNeg++;
+            } else {
+                numbers[i] = (char) positArray[countPos];
+                countPos++;
+            }
+        }
+    }
+
+    private static void countingSortChar(char[] array, int size, int place) {
+        int[] output = new int[size + 1];
+        int max = array[0];
+        for (int i = 1; i < size; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        int[] count = new int[max + 1];
+        for (int i = 0; i < max; ++i) {
+            count[i] = 0;
+        }
+        for (int i = 0; i < size; i++) {
+            count[(array[i] / place) % 10]++;
+        }
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+        for (int i = size - 1; i >= 0; i--) {
+            output[count[(array[i] / place) % 10] - 1] = array[i];
+            count[(array[i] / place) % 10]--;
+        }
+        for (int i = 0; i < size; i++) {
+            array[i] = (char) output[i];
+        }
+    }
+
+
+    private static char getMaxChar(char[] array) {
+        char max = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        return max;
+    }
+
+    private static char getMinChar(char[] array) {
+        char min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+        return min;
     }
 
 
@@ -782,11 +1110,24 @@ public class S23989_p02 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static int rInt(){
         if (Math.random() > 0.5){
-            return (int) (Math.random() * 100);
+            return (int) (Math.random() * 10000);
         } else {
-            return (int) (-Math.random() * 100);
+            return (int) (-Math.random() * 10000);
         }
     }
 
@@ -799,7 +1140,7 @@ public class S23989_p02 {
     }
 
     private static char rChar(){
-        int i = (int) ((Math.random() * (57 - 48)) + 48);
+        int i = (int) ((Math.random() * (126 - 33)) + 33);
         return (char) i;
     }
 
