@@ -687,15 +687,16 @@ public class S23989_p02 {
         for (int i = 0; i < max; ++i) {
             count[i] = 0;
         }
+        int approximation = 1000000000;
         for (int i = 0; i < size; i++) {
-            count[(int) ((array[i] * 1000000000 / place) % 10)]++;
+            count[(int) ((array[i] * approximation / place) % 10)]++;
         }
         for (int i = 1; i < 10; i++) {
             count[i] += count[i - 1];
         }
         for (int i = size - 1; i >= 0; i--) {
-            output[(int) (count[(int) ((array[i] * 1000000000 / place) % 10)] - 1)] = array[i];
-            count[(int) ((array[i] * 1000000000 / place) % 10)]--;
+            output[(int) (count[(int) ((array[i] * approximation / place) % 10)] - 1)] = array[i];
+            count[(int) ((array[i] * approximation / place) % 10)]--;
         }
         for (int i = 0; i < size; i++) {
             array[i] = output[i];
