@@ -15,7 +15,7 @@ public class S23989_p02 {
             int[] intArray =
                     new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
             printIntArray(intArray);
-            sortIntBubble(intArray);
+            sortIntRadix(intArray);
             printIntArray(intArray);
             System.out.println("========================");
         }
@@ -179,38 +179,31 @@ public class S23989_p02 {
     }
 
     public static void sortIntBucket(int[] numbers){
-        printIntArray(bucketSort(numbers, getMaxInt(numbers, numbers.length)));
-    }
-
-
-    private static int[] bucketSort(int[] array, int maxValue)
-    {
-        //createsa buckets array
-        int[] Bucket = new int[maxValue + 1];
-        //creating an array for storing the sorted elements
-        int[] sorted_array = new int[array.length];
-        for (int i = 0; i < array.length; i++)
-            Bucket[array[i]]++;
+        int[] bucket = new int[getMaxInt(numbers, numbers.length) + 1];
+        int[] sorted_array = new int[numbers.length];
+        for (int i = 0; i < numbers.length; i++){
+            bucket[numbers[i]]++;
+        }
         int outPos = 0;
-        for (int i = 0; i < Bucket.length; i++)
-            for (int j = 0; j < Bucket[i]; j++)
+        for (int i = 0; i < bucket.length; i++){
+            for (int k = 0; k < bucket[i]; k++){
                 sorted_array[outPos++] = i;
-        //returns sorted array
-        return sorted_array;
+            }
+        }
+        for (int i = 0; i < numbers.length; i++){
+            numbers[i] = sorted_array[i];
+        }
     }
-
 
 
     public static void sortIntRadix(int[] numbers){
-        // Get maximum element
         int max = getMaxInt(numbers, numbers.length);
-        // Apply counting sort to sort elements based on place value.
         for (int place = 1; max / place > 0; place *= 10) {
             countingSortInt(numbers, numbers.length, place);
         }
     }
 
-    private static void countingSortInt(int array[], int size, int place) {
+    private static void countingSortInt(int[] array, int size, int place) {
         int[] output = new int[size + 1];
         int max = array[0];
         for (int i = 1; i < size; i++) {
@@ -221,23 +214,23 @@ public class S23989_p02 {
         int[] count = new int[max + 1];
         for (int i = 0; i < max; ++i) {
             count[i] = 0;
-        }      // Calculate count of elements
+        }
         for (int i = 0; i < size; i++) {
             count[(array[i] / place) % 10]++;
-        }      // Calculate cummulative count
+        }
         for (int i = 1; i < 10; i++) {
             count[i] += count[i - 1];
-        }      // Place the elements in sorted order
+        }
         for (int i = size - 1; i >= 0; i--) {
             output[count[(array[i] / place) % 10] - 1] = array[i];
             count[(array[i] / place) % 10]--;
-        }      for (int i = 0; i < size; i++) {
+        }
+        for (int i = 0; i < size; i++) {
             array[i] = output[i];
         }
     }
 
-    // Function to get the largest element from an array
-    private static int getMaxInt(int array[], int n) {
+    private static int getMaxInt(int[] array, int n) {
         int max = array[0];
         for (int i = 1; i < n; i++) {
             if (array[i] > max) {
@@ -351,7 +344,7 @@ public class S23989_p02 {
 
 
     private static int rInt(){
-        return (int) (Math.random() * 100);
+        return (int) (-Math.random() * 100);
     }
 
     private static double rDouble(){
