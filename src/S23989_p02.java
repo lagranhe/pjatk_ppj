@@ -2,9 +2,6 @@ public class S23989_p02 {
 
     public static void main(String[] args) {
 
-        float[] floatArray =
-                new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
-
 //        for (int i = 0; i < 100; i++){
 //            int[] intArray =
 //                    new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
@@ -30,25 +27,32 @@ public class S23989_p02 {
 //        }
 
 
+//        for (int i = 0; i < 100; i++){
+//            char[] charArray =
+//                    new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
+//            printCharArray(charArray);
+//            sortCharRadix(charArray);
+//            printCharArray(charArray);
+//            System.out.println("========================");
+//        }
+
         for (int i = 0; i < 100; i++){
-            char[] charArray =
-                    new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
-            printCharArray(charArray);
-            sortCharRadix(charArray);
-            printCharArray(charArray);
+            float[] floatArray =
+                    new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
+                            , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
+                            , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
+
+            printFloatArray(floatArray);
+            sortFloatRadix(floatArray);
+            printFloatArray(floatArray);
             System.out.println("========================");
         }
-
-
-
-
-
     }
 
-    //sort int
+    //---------------------------------->sort int<-----------------------------------------
     public static void sortIntInsertion(int[] numbers){
         for (int i = 1; i < numbers.length; i++) {
             int key = numbers[i];
@@ -412,7 +416,7 @@ public class S23989_p02 {
 
 
 
-    //sort double
+    //---------------------------------->sort double<-----------------------------------------
     public static void sortDoubleInsertion(double[] numbers){
         for (int i = 1; i < numbers.length; i++) {
             double key = numbers[i];
@@ -754,7 +758,7 @@ public class S23989_p02 {
     }
 
 
-    //sort char - short
+    //---------------------------------->sort char<-----------------------------------------
     public static void sortCharInsertion(char[] numbers){
         for (int i = 1; i < numbers.length; i++) {
             int key = numbers[i];
@@ -1074,55 +1078,350 @@ public class S23989_p02 {
         return min;
     }
 
-
-    //sort float
+    //---------------------------------->sort float<-----------------------------------------
     public static void sortFloatInsertion(float[] numbers){
+        for (int i = 1; i < numbers.length; i++) {
+            float key = numbers[i];
+            int k = i - 1;
+            while (k >= 0 && numbers[k] > key) {
+                numbers[k + 1] = numbers[k];
+                k = k - 1;
+            }
+            numbers[k + 1] = key;
+        }
     }
 
     public static void sortFloatSelection(float[] numbers){
+        for (int i = 0; i < numbers.length - 1; i++) {
+            int minElementIndex = i;
+            for (int k = i + 1; k < numbers.length; k++) {
+                if (numbers[minElementIndex] > numbers[k]) {
+                    minElementIndex = k;
+                }
+            }
 
+            if (minElementIndex != i) {
+                float temp = numbers[i];
+                numbers[i] = numbers[minElementIndex];
+                numbers[minElementIndex] = temp;
+            }
+        }
     }
 
     public static void sortFloatMerge(float[] numbers){
+        mergeSortForFloat(numbers, numbers.length);
+    }
 
+    public static void mergeSortForFloat(float[] array, int n) {
+        if (n < 2) {
+            return;
+        }
+        int mid = n / 2;
+        float[] k = new float[mid];
+        float[] r = new float[n - mid];
+
+        for (int i = 0; i < mid; i++) {
+            k[i] = array[i];
+        }
+        for (int i = mid; i < n; i++) {
+            r[i - mid] = array[i];
+        }
+        mergeSortForFloat(k, mid);
+        mergeSortForFloat(r, n - mid);
+
+        mergeFloat(array, k, r, mid, n - mid);
+    }
+
+    public static void mergeFloat(float[] array, float[] l, float[] r, int left, int right) {
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < left && j < right) {
+            if (l[i] <= r[j]) {
+                array[k++] = l[i++];
+            }
+            else {
+                array[k++] = r[j++];
+            }
+        }
+        while (i < left) {
+            array[k++] = l[i++];
+        }
+        while (j < right) {
+            array[k++] = r[j++];
+        }
     }
 
     public static void sortFloatHeapsort(float[] numbers){
+        int n = numbers.length;
+        for (int i = n / 2 - 1; i >= 0; i--){
+            heapifyFloat(numbers, n, i);
+        }
+        for (int i = n - 1; i > 0; i--) {
+            float temp = numbers[0];
+            numbers[0] = numbers[i];
+            numbers[i] = temp;
+            heapifyFloat(numbers, i, 0);
+        }
+    }
 
+    private static void heapifyFloat(float[] array, int n, int i) {
+        int largestNumber = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+
+        if (l < n && array[l] > array[largestNumber]) {
+            largestNumber = l;
+        }
+
+        if (r < n && array[r] > array[largestNumber]) {
+            largestNumber = r;
+        }
+
+        if (largestNumber != i) {
+            float temp = array[i];
+            array[i] = array[largestNumber];
+            array[largestNumber] = temp;
+            heapifyFloat(array, n, largestNumber);
+        }
     }
 
     public static void sortFloatQuicksort(float[] numbers){
+        quickSortFloat(numbers, 0, numbers.length-1);
+    }
 
+    private static void quickSortFloat(float[] array, int begin, int end) {
+        if (begin < end) {
+            int partIndex = partFloat(array, begin, end);
+
+            quickSortFloat(array, begin, partIndex-1);
+            quickSortFloat(array, partIndex+1, end);
+        }
+    }
+
+    private static int partFloat(float[] array, int begin, int end) {
+        float pivot = array[end];
+        int i = (begin-1);
+        for (int k = begin; k < end; k++) {
+            if (array[k] <= pivot) {
+                i++;
+
+                float temp = array[i];
+                array[i] = array[k];
+                array[k] = temp;
+            }
+        }
+        float temp = array[i+1];
+        array[i+1] = array[end];
+        array[end] = temp;
+        return i+1;
     }
 
     public static void sortFloatBubble(float[] numbers){
-
+        int n = numbers.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (numbers[j] > numbers[j + 1]) {
+                    float temp = numbers[j];
+                    numbers[j] = numbers[j + 1];
+                    numbers[j + 1] = temp;
+                }
+            }
+        }
     }
 
     public static void sortFloatBucket(float[] numbers){
+        int countPositive = 0;
+        int countZeroes = 0;
+        for (float i : numbers){
+            if (i > 0) countPositive++;
+            if (i == 0) countZeroes++;
+        }
+        int countNegative = numbers.length - countPositive;
+        float[] positArray = new float[countPositive];
+        float[] negatArray = new float[countNegative];
+        int count = 0;
+        for (float i : numbers){
+            if (i > 0){
+                positArray[count] = i;
+                count++;
+            }
+        }
+        count = 0;
+        for (float i : numbers){
+            if (i < 0){
+                negatArray[count] = 0 - i;
+                count++;
+            }
+        }
+        float[][] positiveBucket = new float[11][positArray.length+1];
+        if (positArray.length > 0){
+            for (int i = 0; i < 11; i ++){
+                positiveBucket[i][0] = 1;
+            }
+            for (int i = 0; i < positArray.length; i ++){
+                int numberOfBucket = (int) (positArray[i] * 10) + 1;
+                float emptyBucket = positiveBucket[numberOfBucket][0];
+                positiveBucket[numberOfBucket][(int) emptyBucket] = positArray[i];
+                positiveBucket[numberOfBucket][0]++;
+            }
+            for (int i = 0; i < 11; i++){
+                positiveBucket[i][0] = 0;
+                sortFloatInsertion(positiveBucket[i]);
+            }
+        }
 
+        float[][] negativeBucket = new float[11][negatArray.length+1];
+        if (negatArray.length > 0){
+            for (int i = 0; i < 11; i ++){
+                negativeBucket[i][0] = 1;
+            }
+            for (int i = 0; i < negatArray.length; i ++){
+                int numberOfBucket = (int) (negatArray[i] * 10) + 1;
+                float emptyBucket = negativeBucket[numberOfBucket][0];
+                negativeBucket[numberOfBucket][(int) emptyBucket] = negatArray[i];
+                negativeBucket[numberOfBucket][0]++;
+            }
+
+            for (int i = 0; i < 11; i ++){
+                for (int k = 0; k < negatArray.length+1; k ++){
+                    negativeBucket[i][k] = - negativeBucket[i][k];
+                }
+            }
+
+            for (int i = 0; i < 11; i++){
+                negativeBucket[i][0] = 0;
+                sortFloatInsertion(negativeBucket[i]);
+            }
+
+        }
+
+        float[] result = new float[numbers.length];
+        for (int i = 0; i < result.length;){
+            for (int countBucket = 10; countBucket > 0; countBucket--){
+                for (int k = 0; k < negativeBucket[countBucket].length; k ++){
+                    if (negativeBucket[countBucket][k] != 0){
+                        result[i] = negativeBucket[countBucket][k];
+                        i++;
+                    }
+                }
+            }
+            for (int countZero = 0; countZero < countZeroes; countZero++){
+                result[i] = 0;
+                i++;
+            }
+            for (int countBucket = 0; countBucket < 11; countBucket++){
+                for (int k = 0; k < positiveBucket[countBucket].length; k ++){
+                    if (positiveBucket[countBucket][k] != 0){
+                        result[i] = positiveBucket[countBucket][k];
+                        i++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < numbers.length; i ++){
+            numbers[i] = result[i];
+        }
     }
 
     public static void sortFloatRadix(float[] numbers){
+        float max = getMaxFloat(numbers);
+        if (max < 0){
+            max = - max;
+        }
+        int countPositive = 0;
+        for (float i : numbers){
+            if (i >= 0) countPositive++;
+        }
+        int countNegative = numbers.length - countPositive;
+        float[] positArray = new float[countPositive];
+        float[] negatArray = new float[countNegative];
+        int count = 0;
+        for (float i : numbers){
+            if (i >= 0){
+                positArray[count] = i;
+                count++;
+            }
+        }
+        count = 0;
+        for (float i : numbers){
+            if (i < 0){
+                negatArray[count] = 0 - i;
+                count++;
+            }
+        }
 
+        if (positArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortFloat(positArray, positArray.length, place);
+            }
+        }
+
+        if (negatArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortFloat(negatArray, negatArray.length, place);
+            }
+            for(int i=0; i<negatArray.length/2; i++){
+                float temp = negatArray[i];
+                negatArray[i] = negatArray[negatArray.length - i - 1];
+                negatArray[negatArray.length -i -1] = temp;
+            }
+        }
+
+        int countNeg=0;
+        int countPos=0;
+        for (int i = 0; i < numbers.length; i++){
+            if (countNeg <= negatArray.length-1){
+                numbers[i] = - negatArray[countNeg];
+                countNeg++;
+            } else {
+                numbers[i] = positArray[countPos];
+                countPos++;
+            }
+        }
+    }
+
+    private static void countingSortFloat(float[] array, int size, int place) {
+        float[] output = new float[size + 1];
+        double max = array[0];
+        for (int i = 1; i < size; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        float[] count = new float[(int) (max * 100 + 1)];
+        for (int i = 0; i < max; ++i) {
+            count[i] = 0;
+        }
+        int approximation = 1000000000;
+        for (int i = 0; i < size; i++) {
+            count[(int) ((array[i] * approximation / place) % 10)]++;
+        }
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+        for (int i = size - 1; i >= 0; i--) {
+            output[(int) (count[(int) ((array[i] * approximation / place) % 10)] - 1)] = array[i];
+            count[(int) ((array[i] * approximation / place) % 10)]--;
+        }
+        for (int i = 0; i < size; i++) {
+            array[i] = output[i];
+        }
+    }
+
+    private static float getMaxFloat(float[] array) {
+        float max = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        return max;
     }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //-------------------------------------->for tests<----------------------------------------
     private static int rInt(){
         if (Math.random() > 0.5){
             return (int) (Math.random() * 10000);
@@ -1145,7 +1444,11 @@ public class S23989_p02 {
     }
 
     private static float rFloat(){
-        return (float) Math.random();
+        if (Math.random() > 0.5){
+            return (float) Math.random();
+        } else {
+            return (float) -Math.random();
+        }
     }
 
 
