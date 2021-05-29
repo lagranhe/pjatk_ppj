@@ -11,11 +11,14 @@ public class S23989_p02 {
         float[] floatArray =
                 new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
 
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 100; i++){
             int[] intArray =
-                    new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
+                    new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
             printIntArray(intArray);
-            sortIntRadix(intArray);
+            sortIntBucket(intArray);
             printIntArray(intArray);
             System.out.println("========================");
         }
@@ -179,27 +182,154 @@ public class S23989_p02 {
     }
 
     public static void sortIntBucket(int[] numbers){
-        int[] bucket = new int[getMaxInt(numbers, numbers.length) + 1];
-        int[] sorted_array = new int[numbers.length];
-        for (int i = 0; i < numbers.length; i++){
-            bucket[numbers[i]]++;
+        int countPositive = 0;
+        int countZeroes = 0;
+        for (int i : numbers){
+            if (i > 0) countPositive++;
+            if (i == 0) countZeroes++;
         }
-        int outPos = 0;
-        for (int i = 0; i < bucket.length; i++){
-            for (int k = 0; k < bucket[i]; k++){
-                sorted_array[outPos++] = i;
+        int countNegative = numbers.length - countPositive;
+        int[] positArray = new int[countPositive];
+        int[] negatArray = new int[countNegative];
+        int count = 0;
+        for (int i : numbers){
+            if (i > 0){
+                positArray[count] = i;
+                count++;
             }
         }
-        for (int i = 0; i < numbers.length; i++){
-            numbers[i] = sorted_array[i];
+        count = 0;
+        for (int i : numbers){
+            if (i < 0){
+                negatArray[count] = 0 - i;
+                count++;
+            }
+        }
+        int[][] positiveBucket = new int[11][positArray.length+1];
+        if (positArray.length > 0){
+            for (int i = 0; i < 11; i ++){
+                positiveBucket[i][0] = 1;
+            }
+            for (int i = 0; i < positArray.length; i ++){
+                int numberOfBucket = (positArray[i] / 10) + 1;
+                int emptyBucket = positiveBucket[numberOfBucket][0];
+                positiveBucket[numberOfBucket][emptyBucket] = positArray[i];
+                positiveBucket[numberOfBucket][0]++;
+            }
+            for (int i = 0; i < 11; i++){
+                positiveBucket[i][0] = 0;
+                sortIntInsertion(positiveBucket[i]);
+            }
+        }
+
+        int[][] negativeBucket = new int[11][negatArray.length+1];
+        if (negatArray.length > 0){
+            for (int i = 0; i < 11; i ++){
+                negativeBucket[i][0] = 1;
+            }
+            for (int i = 0; i < negatArray.length; i ++){
+                int numberOfBucket = (negatArray[i] / 10) + 1;
+                int emptyBucket = negativeBucket[numberOfBucket][0];
+                negativeBucket[numberOfBucket][emptyBucket] = negatArray[i];
+                negativeBucket[numberOfBucket][0]++;
+            }
+
+            for (int i = 0; i < 11; i ++){
+                for (int k = 0; k < negatArray.length+1; k ++){
+                    negativeBucket[i][k] = - negativeBucket[i][k];
+                }
+            }
+
+            for (int i = 0; i < 11; i++){
+                negativeBucket[i][0] = 0;
+                sortIntInsertion(negativeBucket[i]);
+            }
+
+        }
+
+        int[] result = new int[numbers.length];
+        for (int i = 0; i < result.length;){
+            for (int countBucket = 10; countBucket > 0; countBucket--){
+                for (int k = 0; k < negativeBucket[countBucket].length; k ++){
+                    if (negativeBucket[countBucket][k] != 0){
+                        result[i] = negativeBucket[countBucket][k];
+                        i++;
+                    }
+                }
+            }
+            for (int countZero = 0; countZero < countZeroes; countZero++){
+                result[i] = 0;
+                i++;
+            }
+            for (int countBucket = 0; countBucket < 11; countBucket++){
+                for (int k = 0; k < positiveBucket[countBucket].length; k ++){
+                    if (positiveBucket[countBucket][k] != 0){
+                        result[i] = positiveBucket[countBucket][k];
+                        i++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < numbers.length; i ++){
+            numbers[i] = result[i];
         }
     }
 
 
     public static void sortIntRadix(int[] numbers){
-        int max = getMaxInt(numbers, numbers.length);
-        for (int place = 1; max / place > 0; place *= 10) {
-            countingSortInt(numbers, numbers.length, place);
+        int max = getMaxInt(numbers);
+        if (max < 0){
+            max = - max;
+        }
+        int countPositive = 0;
+        for (int i : numbers){
+            if (i >= 0) countPositive++;
+        }
+        int countNegative = numbers.length - countPositive;
+        int[] positArray = new int[countPositive];
+        int[] negatArray = new int[countNegative];
+        int count = 0;
+        for (int i : numbers){
+            if (i >= 0){
+                positArray[count] = i;
+                count++;
+            }
+        }
+        count = 0;
+        for (int i : numbers){
+            if (i < 0){
+                negatArray[count] = 0 - i;
+                count++;
+            }
+        }
+
+        if (positArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortInt(positArray, positArray.length, place);
+            }
+        }
+
+        if (negatArray.length != 0){
+            for (int place = 1; max / place > 0; place *= 10) {
+                countingSortInt(negatArray, negatArray.length, place);
+            }
+            for(int i=0; i<negatArray.length/2; i++){
+                int temp = negatArray[i];
+                negatArray[i] = negatArray[negatArray.length -i -1];
+                negatArray[negatArray.length -i -1] = temp;
+            }
+        }
+
+        int countNeg=0;
+        int countPos=0;
+        for (int i = 0; i < numbers.length; i++){
+            if (countNeg <= negatArray.length-1){
+                numbers[i] = - negatArray[countNeg];
+                countNeg++;
+            } else {
+                numbers[i] = positArray[countPos];
+                countPos++;
+            }
         }
     }
 
@@ -230,9 +360,9 @@ public class S23989_p02 {
         }
     }
 
-    private static int getMaxInt(int[] array, int n) {
+    private static int getMaxInt(int[] array) {
         int max = array[0];
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i < array.length; i++) {
             if (array[i] > max) {
                 max = array[i];
             }
@@ -344,7 +474,11 @@ public class S23989_p02 {
 
 
     private static int rInt(){
-        return (int) (-Math.random() * 100);
+        if (Math.random() > 0.5){
+            return (int) (Math.random() * 100);
+        } else {
+            return (int) (-Math.random() * 100);
+        }
     }
 
     private static double rDouble(){
