@@ -9,7 +9,7 @@ public class S23989_p02 {
                         , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
 
         long timeFirstSortInt = System.nanoTime();
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 100; i++){
             int[] arrayInsertion = copyIntArray(intArray);
             sortIntInsertion(arrayInsertion);
             int[] arraySelection = copyIntArray(intArray);
@@ -28,12 +28,12 @@ public class S23989_p02 {
             sortIntRadix(arrayRadix);
         }
         long timeSecondSortInt = System.nanoTime();
-        System.out.println("Sort table of integers: " + (timeSecondSortInt-timeFirstSortInt)/1000);
+        System.out.println("Sort table of integers: " + (timeSecondSortInt-timeFirstSortInt)/100);
 
 
         double[] doubleArray = copyDoubleArrayFromInt(intArray);
         long timeFirstSortDouble = System.nanoTime();
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 100; i++){
             double[] arrayInsertion = copyDoubleArray(doubleArray);
             sortDoubleInsertion(arrayInsertion);
             double[] arraySelection = copyDoubleArray(doubleArray);
@@ -52,12 +52,12 @@ public class S23989_p02 {
             sortDoubleRadix(arrayRadix);
         }
         long timeSecondSortDouble = System.nanoTime();
-        System.out.println("Sort table of doubles: " + (timeSecondSortDouble-timeFirstSortDouble)/1000);
+        System.out.println("Sort table of doubles: " + (timeSecondSortDouble-timeFirstSortDouble)/100);
 
 
         char[] charArray = copyCharArrayFromInt(intArray);
         long timeFirstSortChar = System.nanoTime();
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 100; i++){
             char[] arrayInsertion = copyCharArray(charArray);
             sortCharInsertion(arrayInsertion);
             char[] arraySelection = copyCharArray(charArray);
@@ -76,12 +76,12 @@ public class S23989_p02 {
             sortCharRadix(arrayRadix);
         }
         long timeSecondSortChar = System.nanoTime();
-        System.out.println("Sort table of chars: " + (timeSecondSortChar-timeFirstSortChar)/1000);
+        System.out.println("Sort table of chars: " + (timeSecondSortChar-timeFirstSortChar)/100);
 
 
         float[] floatArray = copyFloatArrayFromInt(intArray);
         long timeFirstSortFloat = System.nanoTime();
-        for (int i = 0; i < 1000; i++){
+        for (int i = 0; i < 100; i++){
             float[] arrayInsertion = copyFloatArray(floatArray);
             sortFloatInsertion(arrayInsertion);
             float[] arraySelection = copyFloatArray(floatArray);
@@ -101,10 +101,8 @@ public class S23989_p02 {
 
         }
         long timeSecondSortFloat = System.nanoTime();
-        System.out.println("Sort table of float: " + (timeSecondSortFloat-timeFirstSortFloat)/1000);
+        System.out.println("Sort table of float: " + (timeSecondSortFloat-timeFirstSortFloat)/100);
     }
-
-
 
     //---------------------------------->sort int<-----------------------------------------
     public static void sortIntInsertion(int[] numbers){
@@ -230,10 +228,10 @@ public class S23989_p02 {
     }
 
     private static int partInt(int[] array, int begin, int end) {
-        int pivot = array[end];
+        int base = array[end];
         int i = (begin-1);
         for (int k = begin; k < end; k++) {
-            if (array[k] <= pivot) {
+            if (array[k] <= base) {
                 i++;
 
                 int temp = array[i];
@@ -592,10 +590,10 @@ public class S23989_p02 {
     }
 
     private static int partDouble(double[] array, int begin, int end) {
-        double pivot = array[end];
+        double base = array[end];
         int i = (begin-1);
         for (int k = begin; k < end; k++) {
-            if (array[k] <= pivot) {
+            if (array[k] <= base) {
                 i++;
 
                 double temp = array[i];
@@ -795,7 +793,7 @@ public class S23989_p02 {
         for (int i = 0; i < max; ++i) {
             count[i] = 0;
         }
-        int approximation = 1000000000;
+        int approximation = 1000000;
         for (int i = 0; i < size; i++) {
             count[(int) ((array[i] * approximation / place) % 10)]++;
         }
@@ -954,10 +952,10 @@ public class S23989_p02 {
     }
 
     private static int partChar(char[] array, int begin, int end) {
-        int pivot = array[end];
+        int base = array[end];
         int i = (begin-1);
         for (int k = begin; k < end; k++) {
-            if (array[k] <= pivot) {
+            if (array[k] <= base) {
                 i++;
 
                 char temp = array[i];
@@ -1274,10 +1272,10 @@ public class S23989_p02 {
     }
 
     private static int partFloat(float[] array, int begin, int end) {
-        float pivot = array[end];
+        float base = array[end];
         int i = (begin-1);
         for (int k = begin; k < end; k++) {
-            if (array[k] <= pivot) {
+            if (array[k] <= base) {
                 i++;
 
                 float temp = array[i];
@@ -1476,7 +1474,7 @@ public class S23989_p02 {
         for (int i = 0; i < max; ++i) {
             count[i] = 0;
         }
-        int approximation = 1000000000;
+        int approximation = 100000;
         for (int i = 0; i < size; i++) {
             count[(int) ((array[i] * approximation / place) % 10)]++;
         }
@@ -1524,14 +1522,14 @@ public class S23989_p02 {
 
     private static double rDouble(){
         if (Math.random() > 0.5){
-            return Math.random();
+            return Math.random() * 1000;
         } else {
-            return -Math.random();
+            return -Math.random() * 1000;
         }
     }
 
     private static char rChar(){
-        int i = (int) ((Math.random() * (126 - 33)) + 33);
+        int i = (int) ((Math.random() * (126 - 33)) + 33) * 10;
         return (char) i;
     }
 
@@ -1539,7 +1537,7 @@ public class S23989_p02 {
         if (Math.random() > 0.5){
             return (float) Math.random();
         } else {
-            return (float) -Math.random();
+            return (float) - Math.random();
         }
     }
 
