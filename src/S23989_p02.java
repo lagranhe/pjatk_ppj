@@ -2,54 +2,118 @@ public class S23989_p02 {
 
     public static void main(String[] args) {
 
-//        for (int i = 0; i < 100; i++){
-//            int[] intArray =
-//                    new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
-//                            , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
-//            printIntArray(intArray);
-//            sortIntBucket(intArray);
-//            printIntArray(intArray);
-//            System.out.println("========================");
-//        }
+        int[] intArray =
+                new int[] {rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()
+                        , rInt(), rInt(), rInt(), rInt(), rInt(), rInt(), rInt()};
 
-//        for (int i = 0; i < 100; i++){
-//            double[] doubleArray =
-//                    new double[] {rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-//                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-//                            , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-//                    };
-//            printDoubleArray(doubleArray);
-//            sortDoubleBucket(doubleArray);
-//            printDoubleArray(doubleArray);
-//            System.out.println("========================");
-//        }
-
-
-//        for (int i = 0; i < 100; i++){
-//            char[] charArray =
-//                    new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-//                            , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
-//            printCharArray(charArray);
-//            sortCharRadix(charArray);
-//            printCharArray(charArray);
-//            System.out.println("========================");
-//        }
-
-        for (int i = 0; i < 100; i++){
-            float[] floatArray =
-                    new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
-                            , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
-                            , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
-
-            printFloatArray(floatArray);
-            sortFloatRadix(floatArray);
-            printFloatArray(floatArray);
-            System.out.println("========================");
+        long timeFirstSortInt = System.nanoTime();
+        for (int i = 0; i < 1000; i++){
+            int[] arrayInsertion = copyIntArray(intArray);
+            sortIntInsertion(arrayInsertion);
+            int[] arraySelection = copyIntArray(intArray);
+            sortIntSelection(arraySelection);
+            int[] arrayMerge = copyIntArray(intArray);
+            sortIntMerge(arrayMerge);
+            int[] arrayHeapsort = copyIntArray(intArray);
+            sortIntHeapsort(arrayHeapsort);
+            int[] arrayQuicksort = copyIntArray(intArray);
+            sortIntQuicksort(arrayQuicksort);
+            int[] arrayBubble = copyIntArray(intArray);
+            sortIntBubble(arrayBubble);
+            int[] arrayBucket = copyIntArray(intArray);
+            sortIntBucket(arrayBucket);
+            int[] arrayRadix = copyIntArray(intArray);
+            sortIntRadix(arrayRadix);
         }
+        long timeSecondSortInt = System.nanoTime();
+        System.out.println("Sort table of integers: " + (timeSecondSortInt-timeFirstSortInt)/1000);
+
+
+        double[] doubleArray =
+                new double[] {rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
+                };
+        long timeFirstSortDouble = System.nanoTime();
+        for (int i = 0; i < 1000; i++){
+            double[] arrayInsertion = copyDoubleArray(doubleArray);
+            sortDoubleInsertion(arrayInsertion);
+            double[] arraySelection = copyDoubleArray(doubleArray);
+            sortDoubleSelection(arraySelection);
+            double[] arrayMerge = copyDoubleArray(doubleArray);
+            sortDoubleMerge(arrayMerge);
+            double[] arrayHeapsort = copyDoubleArray(doubleArray);
+            sortDoubleHeapsort(arrayHeapsort);
+            double[] arrayQuicksort = copyDoubleArray(doubleArray);
+            sortDoubleQuicksort(arrayQuicksort);
+            double[] arrayBubble = copyDoubleArray(doubleArray);
+            sortDoubleBubble(arrayBubble);
+            double[] arrayBucket = copyDoubleArray(doubleArray);
+            sortDoubleBucket(arrayBucket);
+            double[] arrayRadix = copyDoubleArray(doubleArray);
+            sortDoubleRadix(arrayRadix);
+        }
+        long timeSecondSortDouble = System.nanoTime();
+        System.out.println("Sort table of doubles: " + (timeSecondSortDouble-timeFirstSortDouble)/1000);
+
+
+        char[] charArray =
+                new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
+                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
+        long timeFirstSortChar = System.nanoTime();
+        for (int i = 0; i < 1000; i++){
+            char[] arrayInsertion = copyCharArray(charArray);
+            sortCharInsertion(arrayInsertion);
+            char[] arraySelection = copyCharArray(charArray);
+            sortCharSelection(arraySelection);
+            char[] arrayMerge = copyCharArray(charArray);
+            sortCharMerge(arrayMerge);
+            char[] arrayHeapsort = copyCharArray(charArray);
+            sortCharHeapsort(arrayHeapsort);
+            char[] arrayQuicksort = copyCharArray(charArray);
+            sortCharQuicksort(arrayQuicksort);
+            char[] arrayBubble = copyCharArray(charArray);
+            sortCharBubble(arrayBubble);
+            char[] arrayBucket = copyCharArray(charArray);
+            sortCharBucket(arrayBucket);
+            char[] arrayRadix = copyCharArray(charArray);
+            sortCharRadix(arrayRadix);
+        }
+        long timeSecondSortChar = System.nanoTime();
+        System.out.println("Sort table of chars: " + (timeSecondSortChar-timeFirstSortChar)/1000);
+
+
+        float[] floatArray =
+                new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
+                        , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
+                        , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
+        long timeFirstSortFloat = System.nanoTime();
+        for (int i = 0; i < 1000; i++){
+            float[] arrayInsertion = copyFloatArray(floatArray);
+            sortFloatInsertion(arrayInsertion);
+            float[] arraySelection = copyFloatArray(floatArray);
+            sortFloatSelection(arraySelection);
+            float[] arrayMerge = copyFloatArray(floatArray);
+            sortFloatMerge(arrayMerge);
+            float[] arrayHeapsort = copyFloatArray(floatArray);
+            sortFloatHeapsort(arrayHeapsort);
+            float[] arrayQuicksort = copyFloatArray(floatArray);
+            sortFloatQuicksort(arrayQuicksort);
+            float[] arrayBubble = copyFloatArray(floatArray);
+            sortFloatBubble(arrayBubble);
+            float[] arrayBucket = copyFloatArray(floatArray);
+            sortFloatBucket(arrayBucket);
+            float[] arrayRadix = copyFloatArray(floatArray);
+            sortFloatRadix(arrayRadix);
+
+        }
+        long timeSecondSortFloat = System.nanoTime();
+        System.out.println("Sort table of float: " + (timeSecondSortFloat-timeFirstSortFloat)/1000);
     }
 
     //---------------------------------->sort int<-----------------------------------------
@@ -1424,9 +1488,9 @@ public class S23989_p02 {
     //-------------------------------------->for tests<----------------------------------------
     private static int rInt(){
         if (Math.random() > 0.5){
-            return (int) (Math.random() * 10000);
+            return (int) (Math.random() * 100);
         } else {
-            return (int) (-Math.random() * 10000);
+            return (int) (-Math.random() * 100);
         }
     }
 
@@ -1481,5 +1545,37 @@ public class S23989_p02 {
             System.out.print(s + " ");
         }
         System.out.println();
+    }
+
+    private static int[] copyIntArray(int[] array){
+        int[] result = new int[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
+    }
+
+    private static double[] copyDoubleArray(double[] array){
+        double[] result = new double[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
+    }
+
+    private static char[] copyCharArray(char[] array){
+        char[] result = new char[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
+    }
+
+    private static float[] copyFloatArray(float[] array){
+        float[] result = new float[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
     }
 }
