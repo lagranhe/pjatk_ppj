@@ -31,12 +31,7 @@ public class S23989_p02 {
         System.out.println("Sort table of integers: " + (timeSecondSortInt-timeFirstSortInt)/1000);
 
 
-        double[] doubleArray =
-                new double[] {rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                        , rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble(), rDouble()
-                };
+        double[] doubleArray = copyDoubleArrayFromInt(intArray);
         long timeFirstSortDouble = System.nanoTime();
         for (int i = 0; i < 1000; i++){
             double[] arrayInsertion = copyDoubleArray(doubleArray);
@@ -60,11 +55,7 @@ public class S23989_p02 {
         System.out.println("Sort table of doubles: " + (timeSecondSortDouble-timeFirstSortDouble)/1000);
 
 
-        char[] charArray =
-                new char[] {rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()
-                        , rChar(), rChar(), rChar(), rChar(), rChar(), rChar(), rChar()};
+        char[] charArray = copyCharArrayFromInt(intArray);
         long timeFirstSortChar = System.nanoTime();
         for (int i = 0; i < 1000; i++){
             char[] arrayInsertion = copyCharArray(charArray);
@@ -88,10 +79,7 @@ public class S23989_p02 {
         System.out.println("Sort table of chars: " + (timeSecondSortChar-timeFirstSortChar)/1000);
 
 
-        float[] floatArray =
-                new float[] {rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
-                        , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()
-                        , rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat(), rFloat()};
+        float[] floatArray = copyFloatArrayFromInt(intArray);
         long timeFirstSortFloat = System.nanoTime();
         for (int i = 0; i < 1000; i++){
             float[] arrayInsertion = copyFloatArray(floatArray);
@@ -115,6 +103,8 @@ public class S23989_p02 {
         long timeSecondSortFloat = System.nanoTime();
         System.out.println("Sort table of float: " + (timeSecondSortFloat-timeFirstSortFloat)/1000);
     }
+
+
 
     //---------------------------------->sort int<-----------------------------------------
     public static void sortIntInsertion(int[] numbers){
@@ -633,12 +623,22 @@ public class S23989_p02 {
     }
 
     public static void sortDoubleBucket(double[] numbers){
+        double maxValue = getMaxDouble(numbers);
+        double minValue = getMinDouble(numbers);
+        int cap = 1;
+        maxValue = Math.max(maxValue, -minValue);
+        while (maxValue > 10){
+            maxValue = maxValue / 10;
+            cap = cap * 10;
+        }
+
         int countPositive = 0;
         int countZeroes = 0;
         for (double i : numbers){
             if (i > 0) countPositive++;
             if (i == 0) countZeroes++;
         }
+
         int countNegative = numbers.length - countPositive;
         double[] positArray = new double[countPositive];
         double[] negatArray = new double[countNegative];
@@ -662,7 +662,7 @@ public class S23989_p02 {
                 positiveBucket[i][0] = 1;
             }
             for (int i = 0; i < positArray.length; i ++){
-                int numberOfBucket = (int) (positArray[i] * 10) + 1;
+                int numberOfBucket = (int) (positArray[i] / cap) + 1;
                 double emptyBucket = positiveBucket[numberOfBucket][0];
                 positiveBucket[numberOfBucket][(int) emptyBucket] = positArray[i];
                 positiveBucket[numberOfBucket][0]++;
@@ -679,7 +679,7 @@ public class S23989_p02 {
                 negativeBucket[i][0] = 1;
             }
             for (int i = 0; i < negatArray.length; i ++){
-                int numberOfBucket = (int) (negatArray[i] * 10) + 1;
+                int numberOfBucket = (int) (negatArray[i] / cap) + 1;
                 double emptyBucket = negativeBucket[numberOfBucket][0];
                 negativeBucket[numberOfBucket][(int) emptyBucket] = negatArray[i];
                 negativeBucket[numberOfBucket][0]++;
@@ -819,6 +819,16 @@ public class S23989_p02 {
             }
         }
         return max;
+    }
+
+    private static double getMinDouble(double[] array) {
+        double min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+        return min;
     }
 
 
@@ -1295,6 +1305,15 @@ public class S23989_p02 {
     }
 
     public static void sortFloatBucket(float[] numbers){
+        float maxValue = getMaxFloat(numbers);
+        float minValue = getMinFloat(numbers);
+        int cap = 1;
+        maxValue = Math.max(maxValue, -minValue);
+        while (maxValue > 10){
+            maxValue = maxValue / 10;
+            cap = cap * 10;
+        }
+
         int countPositive = 0;
         int countZeroes = 0;
         for (float i : numbers){
@@ -1324,7 +1343,7 @@ public class S23989_p02 {
                 positiveBucket[i][0] = 1;
             }
             for (int i = 0; i < positArray.length; i ++){
-                int numberOfBucket = (int) (positArray[i] * 10) + 1;
+                int numberOfBucket = (int) (positArray[i] / cap) + 1;
                 float emptyBucket = positiveBucket[numberOfBucket][0];
                 positiveBucket[numberOfBucket][(int) emptyBucket] = positArray[i];
                 positiveBucket[numberOfBucket][0]++;
@@ -1341,7 +1360,7 @@ public class S23989_p02 {
                 negativeBucket[i][0] = 1;
             }
             for (int i = 0; i < negatArray.length; i ++){
-                int numberOfBucket = (int) (negatArray[i] * 10) + 1;
+                int numberOfBucket = (int) (negatArray[i] / cap) + 1;
                 float emptyBucket = negativeBucket[numberOfBucket][0];
                 negativeBucket[numberOfBucket][(int) emptyBucket] = negatArray[i];
                 negativeBucket[numberOfBucket][0]++;
@@ -1483,14 +1502,23 @@ public class S23989_p02 {
         return max;
     }
 
+    private static float getMinFloat(float[] array) {
+        float min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+        return min;
+    }
 
 
     //-------------------------------------->for tests<----------------------------------------
     private static int rInt(){
         if (Math.random() > 0.5){
-            return (int) (Math.random() * 100);
+            return (int) (Math.random() * 1000);
         } else {
-            return (int) (-Math.random() * 100);
+            return (int) (-Math.random() * 1000);
         }
     }
 
@@ -1572,6 +1600,31 @@ public class S23989_p02 {
     }
 
     private static float[] copyFloatArray(float[] array){
+        float[] result = new float[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
+    }
+
+
+    private static double[] copyDoubleArrayFromInt(int[] array){
+        double[] result = new double[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = array[i];
+        }
+        return result;
+    }
+
+    private static char[] copyCharArrayFromInt(int[] array){
+        char[] result = new char[array.length];
+        for (int i = 0; i < array.length; i++){
+            result[i] = (char) array[i];
+        }
+        return result;
+    }
+
+    private static float[] copyFloatArrayFromInt(int[] array){
         float[] result = new float[array.length];
         for (int i = 0; i < array.length; i++){
             result[i] = array[i];
