@@ -26,14 +26,14 @@ public class S23989_p04 {
         int height = img.getHeight();
         int[][] matrix = new int [height][width];
         StringBuilder result = new StringBuilder("");
-        for (int y = 2; y < height-1; y++) {
-            for (int x = 2; x < width-1; x++) {
+        for (int y = 2; y < height-3; y++) {
+            for (int x = 2; x < width-3; x++) {
                 int p = img.getRGB(x,y);
                 matrix[y][x] = p;
                 int pRight = img.getRGB(x+1,y);
-                //int pLeft = img.getRGB(x-1,y);
+                int pRight2 = img.getRGB(x+2,y);
                 int pTop = img.getRGB(x,y+1);
-                //int pDown = img.getRGB(x, y-1);
+                int pTop2 = img.getRGB(x, y+2);
                 int lowBlack = -16777216;
                 int highBlack = -11111111;
                 int lowWhite = -11111111;
@@ -42,9 +42,14 @@ public class S23989_p04 {
                 if ((((p >= lowBlack && p < highBlack) && (pRight <= highWhite && pRight >= lowWhite )) ||
                         ((pRight >= lowBlack && pRight < highBlack) && (p <= highWhite && p >= lowWhite))) ||
 
+                    (((p >= lowBlack && p < highBlack) && (pRight2 <= highWhite && pRight2 >= lowWhite )) ||
+                            ((pRight2 >= lowBlack && pRight2 < highBlack) && (p <= highWhite && p >= lowWhite))) ||
+
                 (((p >= lowBlack && p < highBlack) && (pTop <= highWhite && pTop >= lowWhite )) ||
-                        ((pTop >= lowBlack && pTop < highBlack) && (p <= highWhite && p >= lowWhite)))
-                )
+                        ((pTop >= lowBlack && pTop < highBlack) && (p <= highWhite && p >= lowWhite))) ||
+
+                (((p >= lowBlack && p < highBlack) && (pTop2 <= highWhite && pTop2 >= lowWhite )) ||
+                        ((pTop2 >= lowBlack && pTop2 < highBlack) && (p <= highWhite && p >= lowWhite))))
 
                 {
                     result.append("[").append(x).append(", ").append(y).append("], ");
