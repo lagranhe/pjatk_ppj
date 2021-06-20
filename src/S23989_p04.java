@@ -31,25 +31,20 @@ public class S23989_p04 {
                 int p = img.getRGB(x,y);
                 matrix[y][x] = p;
                 int pRight = img.getRGB(x+1,y);
-                int pLeft = img.getRGB(x-1,y);
+                //int pLeft = img.getRGB(x-1,y);
                 int pTop = img.getRGB(x,y+1);
-                int pDown = img.getRGB(x, y-1);
+                //int pDown = img.getRGB(x, y-1);
                 int lowBlack = -16777216;
-                int highBlack = -14111111;
-                int lowWhite = -10000;
+                int highBlack = -11111111;
+                int lowWhite = -11111111;
                 int highWhite = -1;
 
                 if ((((p >= lowBlack && p < highBlack) && (pRight <= highWhite && pRight >= lowWhite )) ||
                         ((pRight >= lowBlack && pRight < highBlack) && (p <= highWhite && p >= lowWhite))) ||
 
-                    (((p >= lowBlack && p < highBlack) && (pLeft <= highWhite && pLeft >= lowWhite )) ||
-                            ((pLeft >= lowBlack && pLeft < highBlack) && (p <= highWhite && p >= lowWhite))) ||
-
                 (((p >= lowBlack && p < highBlack) && (pTop <= highWhite && pTop >= lowWhite )) ||
-                        ((pTop >= lowBlack && pTop < highBlack) && (p <= highWhite && p >= lowWhite))) ||
-
-                (((p >= lowBlack && p < highBlack) && (pDown <= highWhite && pDown >= lowWhite )) ||
-                        ((pDown >= lowBlack && pDown < highBlack) && (p <= highWhite && p >= lowWhite))))
+                        ((pTop >= lowBlack && pTop < highBlack) && (p <= highWhite && p >= lowWhite)))
+                )
 
                 {
                     result.append("[").append(x).append(", ").append(y).append("], ");
