@@ -1,7 +1,7 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class S23989_p03 {
-
     public static void main(String[] args) {
         S23989_p03 s = new S23989_p03();
         //change path to your directory
@@ -23,6 +23,7 @@ public class S23989_p03 {
         s.outputStudentArrayToTextFile(outputFileSortName, arrayOfStudents);
 
         Student[] arrayOfStudentsFromBinary = s.inputStudentArrayFromBinaryFile(outputFileSortSkaBin);
+        System.out.println("Recovered information from binary file (please compare with sortSka.txt):");
         for (Student stud : arrayOfStudentsFromBinary){
             System.out.println(stud);
         }
@@ -89,11 +90,15 @@ public class S23989_p03 {
             for (Student student : studentArray){
                 String outputString = student.getFirstName()
                         + student.getIndex().substring(1)
-                        + student.getSecondName()
-                        + (student.getYearOfBirth()-1900);
-
+                        + student.getSecondName();
                 byte[] data = outputString.getBytes();
-                for (byte b : data){
+                byte[] dataWithYear = new byte[data.length+1];
+                for (int i = 0; i < data.length; i ++){
+                    dataWithYear[i] = data[i];
+                }
+                byte yearInByte = (byte) (student.getYearOfBirth()-1900);
+                dataWithYear[dataWithYear.length-1] = yearInByte;
+                for (byte b : dataWithYear){
                     writer.write(b);
                 }
             }
@@ -122,8 +127,18 @@ public class S23989_p03 {
         for (int i = 0; i < resultArray.length * 2; i += 2){
             String firstName = lines[i].replaceAll("\\d", "");
             String index = "s" + lines[i].replaceAll("[^\\d.]", "");
-            String secondName = lines[i+1].replaceAll("\\d", "");
-            int yearOfBirth = Integer.parseInt(lines[i+1].replaceAll("[^\\d.]", "")) + 1900;
+            String secondName = lines[i+1].substring(0, lines[i+1].length()-1);
+            String year = lines[i+1].substring(lines[i+1].length()-1);
+            byte yearInByte = 0;
+            for (byte b : year.getBytes(StandardCharsets.UTF_16)){
+                yearInByte = b;
+            }
+            int yearOfBirth;
+            if (yearInByte < 0){
+                yearOfBirth = yearInByte + 256 + 1900;
+            } else {
+                yearOfBirth = yearInByte + 1900;
+            }
             resultArray[count] = new Student(firstName, secondName, yearOfBirth, index);
             count++;
         }
@@ -263,12 +278,7 @@ public class S23989_p03 {
 
         @Override
         public String toString() {
-            return "Student{" +
-                    "index='" + index + '\'' +
-                    ", firstName='" + super.firstName + '\'' +
-                    ", secondName='" + super.secondName + '\'' +
-                    ", yearOfBirth=" + super.yearOfBirth +
-                    '}';
+            return index + " " + super.getFirstName() + super.getSecondName() + " " + getYearOfBirth();
         }
     }
 }
