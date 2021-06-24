@@ -13,21 +13,55 @@ public class S23989_p04 {
     tej siatki kalibracyjnej i poindeksuje je poczynając od indeksu [0 wiersz,0 kolumna].
      */
 
-    public static final int lowBlack = -16777216;
-    public static final int highBlack = 10111113;
-    public static final int lowWhite = -10111111;
-    public static final int highWhite = -1;
-    public static final int green = -10111112;
-
     public static void main(String[] args) {
         BufferedImage img = null;
         File file;
 
         int lowBlack = -16777216;
-        int highBlack = -10111113;
-        int lowWhite = -10111111;
+        int highBlack = -10111114;
+        int lowWhite = -10111112;
         int highWhite = -1;
-        int green = -10111112;
+        int green = -10111113;
+        int red = 0xFFFF0000;
+        final Point[] points;
+
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/grayFisheye.png");
+            img = ImageIO.read(file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+        int width = img.getWidth();
+        int height = img.getHeight();
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                int p = img.getRGB(x,y);
+                int a = (p>>24)&0xff;
+                int r = (p>>16)&0xff;
+                int g = (p>>8)&0xff;
+                int b = p&0xff;
+                int avg = (r+g+b)/3;
+                p = (a<<24) | (avg<<16) | (avg<<8) | avg;
+                img.setRGB(x, y, p);
+            }
+        }
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/grayFisheye.png");
+            ImageIO.write(img, "jpg", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+
+
+/////////////////////////////////////////////////////////
 
 
         try {
@@ -36,14 +70,11 @@ public class S23989_p04 {
         } catch (IOException e ){
             e.printStackTrace();
         }
-        int width = img.getWidth();
-        int height = img.getHeight();
-        int[][] matrix = new int [height][width];
-        StringBuilder result = new StringBuilder("");
+        //int width = img.getWidth();
+        //int height = img.getHeight();
         for (int y = 2; y < height-3; y++) {
             for (int x = 2; x < width-3; x++) {
                 int p = img.getRGB(x,y);
-                matrix[y][x] = p;
                 int pRight = img.getRGB(x+1,y);
                 int pTop = img.getRGB(x,y+1);
 
@@ -64,8 +95,6 @@ public class S23989_p04 {
                         || (((p >= lowBlack && p < highBlack) && (pTop2 <= highWhite && pTop2 >= lowWhite )) ||
                         ((pTop2 >= lowBlack && pTop2 < highBlack) && (p <= highWhite && p >= lowWhite)))
                 ) {
-
-                    result.append("[").append(x).append(", ").append(y).append("], ");
                     img.setRGB(x, y, lowBlack);
                 } else {
                     img.setRGB(x, y, highWhite);
@@ -82,8 +111,6 @@ public class S23989_p04 {
         {
             System.out.println(e);
         }
-        System.out.println(result);
-        System.out.println("============================================================");
 
 
 
@@ -99,28 +126,68 @@ public class S23989_p04 {
         for (int y = 3; y < height-3; y++) {
             for (int x = 3; x < width-3; x++) {
 
-                int p = img.getRGB(x,y);
+                int p1 = img.getRGB(x-2,y-2);
+                int p2 = img.getRGB(x-1,y-2);
+                int p3 = img.getRGB(x,y-2);
+                int p4 = img.getRGB(x+1,y-2);
+                int p5 = img.getRGB(x+2,y-2);
 
-                int[][] formOfNode = {
-                        {img.getRGB(x-2,y-2), img.getRGB(x-1,y-2), img.getRGB(x,y-2), img.getRGB(x+1,y-2), img.getRGB(x+2,y-2)},
-                        {img.getRGB(x-2,y-1), img.getRGB(x-1,y-1), img.getRGB(x,y-1), img.getRGB(x+1,y-1), img.getRGB(x+2,y+2)},
-                        {img.getRGB(x-2,y), img.getRGB(x-1,y), img.getRGB(x,y), img.getRGB(x+1,y), img.getRGB(x+2,y)},
-                        {img.getRGB(x-2,y+1), img.getRGB(x-1,y+1), img.getRGB(x,y+1), img.getRGB(x+1,y+1), img.getRGB(x+2,y+1)},
-                        {img.getRGB(x-2,y+2), img.getRGB(x-1,y+2), img.getRGB(x,y+2), img.getRGB(x+1,y+2), img.getRGB(x+2,y+2)}
-                };
+                int p6 = img.getRGB(x-2,y-1);
+                int p7 = img.getRGB(x-1,y-1);
+                int p8 = img.getRGB(x,y-1);
+                int p9 = img.getRGB(x+1,y-1);
+                int p10 = img.getRGB(x+2,y-1);
 
-                if (
-                        isFormComparable(formOfNode, form1)
-                                || isFormComparable(formOfNode, form2)
-                                || isFormComparable(formOfNode, form3)
-                                || isFormComparable(formOfNode, form4)
-                ) {
-                    result.append("[").append(x).append(", ").append(y).append("], ");
+                int p11 = img.getRGB(x-2,y);
+                int p12 = img.getRGB(x-1,y);
+                int p13 = img.getRGB(x,y);
+                int p14 = img.getRGB(x+1,y);
+                int p15 = img.getRGB(x+2,y);
+
+                int p16 = img.getRGB(x-2,y+1);
+                int p17 = img.getRGB(x-1,y+1);
+                int p18 = img.getRGB(x,y+1);
+                int p19 = img.getRGB(x+1,y+1);
+                int p20 = img.getRGB(x+2,y+1);
+
+                int p21 = img.getRGB(x-2,y+2);
+                int p22 = img.getRGB(x-1,y+2);
+                int p23 = img.getRGB(x,y+2);
+                int p24 = img.getRGB(x+1,y+2);
+                int p25 = img.getRGB(x+2,y+2);
+                int count = 0;
+                //count = (p1 == lowBlack) ? count+1 : count;
+                count = (p2 == lowBlack) ? count+1 : count;
+                count = (p3 == lowBlack) ? count+1 : count;
+                count = (p4 == lowBlack) ? count+1 : count;
+                //count = (p5 == lowBlack) ? count+1 : count;
+                count = (p6 == lowBlack) ? count+1 : count;
+                count = (p7 == lowBlack) ? count+1 : count;
+                count = (p8 == lowBlack) ? count+1 : count;
+                count = (p9 == lowBlack) ? count+1 : count;
+                count = (p10 == lowBlack) ? count+1 : count;
+                count = (p11 == lowBlack) ? count+1 : count;
+                count = (p12 == lowBlack) ? count+1 : count;
+                count = (p13 == lowBlack) ? count+1 : count;
+                count = (p14 == lowBlack) ? count+1 : count;
+                count = (p15 == lowBlack) ? count+1 : count;
+                count = (p16 == lowBlack) ? count+1 : count;
+                count = (p17 == lowBlack) ? count+1 : count;
+                count = (p18 == lowBlack) ? count+1 : count;
+                count = (p19 == lowBlack) ? count+1 : count;
+                //count = (p20 == lowBlack) ? count+1 : count;
+                count = (p21 == lowBlack) ? count+1 : count;
+                count = (p22 == lowBlack) ? count+1 : count;
+                count = (p23 == lowBlack) ? count+1 : count;
+                count = (p24 == lowBlack) ? count+1 : count;
+                //count = (p25 == lowBlack) ? count+1 : count;
+
+
+                if (count >= 14) {
                     img.setRGB(x, y, green);
                 }
             }
         }
-        System.out.println(result);
 
         try
         {
@@ -135,52 +202,227 @@ public class S23989_p04 {
 
 
         ////////////////////////////////
-    }
 
-    private static boolean isFormComparable (int[][] array1, int [][] array2){
-        if ((array1.length != array2.length) || (array1[0].length != array2[0].length)){
-            return false;
+
+
+
+        try {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            img = ImageIO.read(file);
+        } catch (IOException e ){
+            e.printStackTrace();
         }
+
+        for (int y = 10; y < height-10; y++) {
+            for (int x = 20; x < width-20; x++) {
+                int p = img.getRGB(x,y);
+
+                if (p == green) {
+                    int count = 0;
+                    int sumX = 0;
+                    int sumY = 0;
+                    for (int i = -10; i < 10; i++){
+                        for (int j = -20; j < 20; j++){
+                            int point = img.getRGB(x+j,y+i);
+                            if (point == green || point == red) {
+                                sumX += x+j;
+                                sumY += y+i;
+                                count++;
+                            }
+                        }
+                    }
+                    img.setRGB((int) Math.ceil(sumX/count), (int) Math.ceil(sumY/count), red);
+                }
+            }
+        }
+
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            ImageIO.write(img, "png", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+
+
+        /////////////////////////////////////////
+
+
+
+        try {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            img = ImageIO.read(file);
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+        for (int y = 20; y < height-30; y++) {
+            for (int x = 0; x < width-25; x++) {
+                int p = img.getRGB(x,y);
+                int countOfRed = 0;
+                if (p == red){
+                    for (int i = -20; i < 30; i++){
+                        for (int j = 0; j < 25; j++){
+                            if (j == 0 && i == 0) continue;
+                            int pointInScope = img.getRGB(x+j,y+i);
+                            if (pointInScope == red){
+                                img.setRGB(x+j,y+i, lowBlack);
+                                countOfRed++;
+                            }
+                        }
+                    }
+                    if (countOfRed > 1){
+                        img.setRGB(x,y, lowBlack);
+                    }
+                }
+            }
+        }
+
+
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            ImageIO.write(img, "png", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+
+
+        /////////////////////////////////////////////////////////////
+
+        try {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            img = ImageIO.read(file);
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+        for (int y = 50; y < height-50; y++) {
+            for (int x = 50; x < width-50; x++) {
+                int p = img.getRGB(x,y);
+                int countOfGreen = 0;
+                if (p == red){
+                    for (int i = -50; i < 50; i++){
+                        for (int j = -50; j < 50; j++){
+                            int pointInScope = img.getRGB(x+j,y+i);
+                            if (pointInScope == green){
+                                countOfGreen++;
+                            }
+                        }
+                    }
+                    if (countOfGreen > 60){
+                        img.setRGB(x,y, green);
+                    }
+                }
+            }
+        }
+
+
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            ImageIO.write(img, "png", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+
+        ////////////////////////////////////////////////////////////////////
+
+        try {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            img = ImageIO.read(file);
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+        int countOfCenterPointsInSquare = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (img.getRGB(x,y) == red){
+                    countOfCenterPointsInSquare++;
+                }
+            }
+        }
+
+
+        points = new Point[countOfCenterPointsInSquare];
         int count = 0;
-        for (int i = 0; i < array1.length; i++){
-            for (int j = 0; j < array1[i].length; j++){
-                if (array1[i][j] == array2[i][j] && array1[i][j] == lowBlack){
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (img.getRGB(x,y) == red){
+                    points[count] = new Point(x, y);
                     count++;
                 }
             }
         }
-        return (count >= 8);
+        for (Point p : points){
+            System.out.println(p);
+        }
+
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/outGrayFisheye.png");
+            ImageIO.write(img, "png", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
+
+
+        ///////////////////////////////////////////
+
+        try {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/grayFisheye.png");
+            img = ImageIO.read(file);
+        } catch (IOException e ){
+            e.printStackTrace();
+        }
+
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int p = img.getRGB(x,y);
+                for (Point pointOfRed : points){
+                    if (pointOfRed.x == x && pointOfRed.y == y){
+                        p = red;
+                    }
+                }
+                img.setRGB(x, y, p);
+            }
+        }
+        try
+        {
+            file = new File("/home/mich/Documents/PJATK/PPJ/TestProjects/src/resultGrayFisheye.png");
+            ImageIO.write(img, "png", file);
+        }
+        catch(IOException e)
+        {
+            System.out.println(e);
+        }
     }
 
-    private static int[][] form1 = {
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {lowBlack, lowBlack, lowBlack, lowBlack, lowBlack},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite}
-    };
+    private static class Point {
+        public int x;
+        public int y;
 
-    private static int[][] form2 = {
-            {lowBlack, highWhite, highWhite, highWhite, lowBlack},
-            {highWhite, lowBlack, highWhite, lowBlack, highWhite},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {highWhite, lowBlack, highWhite, lowBlack, highWhite},
-            {lowBlack, highWhite, highWhite, highWhite, lowBlack}
-    };
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 
-    private static int[][] form3 = {
-            {highWhite, lowBlack, highWhite, highWhite, highWhite},
-            {highWhite, lowBlack, highWhite, lowBlack, lowBlack},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {highWhite, lowBlack, highWhite, lowBlack, highWhite},
-            {lowBlack, highWhite, highWhite, lowBlack, highWhite}
-    };
-
-    private static int[][] form4 = {
-            {highWhite, highWhite, highWhite, lowBlack, highWhite},
-            {lowBlack, lowBlack, highWhite, lowBlack, highWhite},
-            {highWhite, highWhite, lowBlack, highWhite, highWhite},
-            {highWhite, lowBlack, highWhite, lowBlack, lowBlack},
-            {highWhite, lowBlack, highWhite, highWhite, highWhite}
-    };
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    '}';
+        }
+    }
 }
