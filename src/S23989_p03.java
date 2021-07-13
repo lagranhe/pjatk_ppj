@@ -2,6 +2,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class S23989_p03 {
+
+    /*
+        Dont add sortSka.bin because for microsoft teams it can be "potentially unsafe file"
+     */
+
     public static void main(String[] args) {
         S23989_p03 s = new S23989_p03();
         //change path to your directory

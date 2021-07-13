@@ -104,6 +104,8 @@ public class S23989_p04 {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         for (int y = 3; y < height - 3; y++) {
             for (int x = 3; x < width - 3; x++) {
 
